@@ -37,8 +37,7 @@ struct SettingsView: View {
             .navigationBarTitle("Notificaties", displayMode: .inline)
         }
         .onDisappear{
-            let variable = ViewModel()
-            variable.postJsonData(data: viewModel.notificationSet)
+            ViewModel().postNotificationSettings(data: viewModel.notificationSet)
         }
     }
 

@@ -27,8 +27,8 @@ struct IntradayView: View {
                 }
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 10)
-                .navigationBarTitle("Intraday", displayMode: .inline)
-                .navigationBarItems(
+                .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
+                  .navigationBarItems(
                     trailing:
                         Button(
                             action:

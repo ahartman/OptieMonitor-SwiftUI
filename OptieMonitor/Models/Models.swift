@@ -9,7 +9,12 @@
 import Foundation
 import SwiftUI
 
-var deviceTokenString = "0"
+var deviceTokenString: String = ""
+{
+    didSet{
+        ViewModel().postDeviceToken()
+    }
+}
 var notificationSet = NotificationSetting()
 var notificationSetStale: Bool = false
 
