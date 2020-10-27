@@ -26,41 +26,7 @@
         @Published var dataStale: Bool = false
         @Published var notificationSet = NotificationSetting()
         {didSet{notificationSetStale = true}}
-        
-        func generateData(action: String) -> Void {
-            getJsonData(action: action) { result in
-                switch result{
-                case .success(let result):
-                    self.intraLines = self.formatTableView(lines: result.intraday)
-                    self.interLines = self.formatTableView(lines: result.interday)
-                    self.intraGraph = self.formatIntraGraph(lines: result.intraday)
-                    self.interGraph = self.formatInterGraph(lines: result.interday)
-                    self.intraFooter = self.formatFooter(lines: result.intraday)
-                    self.interFooter = self.formatFooter(lines: result.interday)
-                    
-                    self.intraInterLines = []
-                    self.intraInterLines.append(self.interLines.first!)
-                    self.intraInterLines.append(self.interLines.last!)
-                    
-                    self.caption = result.caption
-                    self.datetimeText = self.formatDate(dateIn: result.datetime)
-                    self.message = result.message ?? ""
-                    if(self.message.count > 0) {self.isMessage = true}
-                    self.notificationSet = result.notificationSettings
-                    self.dataStale = false
-                    notificationSetStale = false
-                case .failure(let error):
-                    switch error{
-                    case .badURL:
-                        print("Bad URL")
-                    case .requestFailed:
-                        print("Request failed")
-                    case .unknown:
-                        print("Unknown error")
-                    }
-                }
-            }
-        }
+
         func formatDate(dateIn: Date) -> String {
             let formatter = DateFormatter()
             let dateMidnight = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date())
@@ -166,6 +132,41 @@
             }
             return deltaColor
         }
+        
+        func generateData(action: String) -> Void {
+            getJsonData(action: action) { result in
+                switch result{
+                case .success(let result):
+                    self.intraLines = self.formatTableView(lines: result.intraday)
+                    self.interLines = self.formatTableView(lines: result.interday)
+                    self.intraGraph = self.formatIntraGraph(lines: result.intraday)
+                    self.interGraph = self.formatInterGraph(lines: result.interday)
+                    self.intraFooter = self.formatFooter(lines: result.intraday)
+                    self.interFooter = self.formatFooter(lines: result.interday)
+
+                    self.intraInterLines = []
+                    self.intraInterLines.append(self.interLines.first!)
+                    self.intraInterLines.append(self.interLines.last!)
+
+                    self.caption = result.caption
+                    self.datetimeText = self.formatDate(dateIn: result.datetime)
+                    self.message = result.message ?? ""
+                    if(self.message.count > 0) {self.isMessage = true}
+                    self.notificationSet = result.notificationSettings
+                    self.dataStale = false
+                    notificationSetStale = false
+                case .failure(let error):
+                    switch error{
+                    case .badURL:
+                        print("Bad URL")
+                    case .requestFailed:
+                        print("Request failed")
+                    case .unknown:
+                        print("Unknown error")
+                    }
+                }
+            }
+        }
         func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
             print("JsonData")
             dataStale = true
@@ -193,27 +194,7 @@
                 }
             }.resume()
         }
-        
-        func postDeviceToken(){
-            let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
-            postJSONData(jsonObject, action: "apns") { (error) in
-                if let error = error {
-                    fatalError(error.localizedDescription)
-                }
-            }
-        }
-        func postNotificationSettings(data: NotificationSetting){
-            if(notificationSetStale){
-                postJSONData(data, action: "notificationSettings") { (error) in
-                    if let error = error {
-                        fatalError(error.localizedDescription)
-                    }
-                }
-                notificationSetStale = false
-            }
-        }
-        
-        func postJSONData<T: Codable>(_ value: T, action: String, completion:((Error?) -> Void)?) {
+        func postJSONData<T: Codable>(_ value: T, action: String) {
             let url = URL(string: dataURL + action)!
             var request = URLRequest(url: url)
             request.httpMethod = "POST"
@@ -228,19 +209,19 @@
             
             let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
                 if let error = error {
-                    print ("error: \(error)")
-                    return
+                    print ("Error: \(error)")
+
                 }
                 guard let response = response as? HTTPURLResponse,
                       (200...299).contains(response.statusCode) else {
-                    print ("server error")
+                    print ("Server error")
                     return
                 }
                 if let mimeType = response.mimeType,
                    mimeType == "application/json",
                    let data = data,
                    let dataString = String(data: data, encoding: .utf8) {
-                    print ("response to POST: \(dataString)")
+                    print ("Response to POST: \(dataString)")
                 }
             }
             task.resume()

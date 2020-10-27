@@ -37,7 +37,11 @@ struct SettingsView: View {
             .navigationBarTitle("Notificaties", displayMode: .inline)
         }
         .onDisappear{
-            ViewModel().postNotificationSettings(data: viewModel.notificationSet)
+            if(notificationSetStale){
+                ViewModel().postJSONData(viewModel.notificationSet, action: "notificationSettings")
+                notificationSetStale = false
+            }
+            //ViewModel().postNotificationSettings()
         }
     }
 

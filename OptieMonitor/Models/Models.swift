@@ -12,7 +12,8 @@ import SwiftUI
 var deviceTokenString: String = ""
 {
     didSet{
-        ViewModel().postDeviceToken()
+        let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
+        ViewModel().postJSONData(jsonObject, action: "apns")
     }
 }
 var notificationSet = NotificationSetting()
