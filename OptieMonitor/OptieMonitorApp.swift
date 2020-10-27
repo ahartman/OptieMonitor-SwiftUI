@@ -9,9 +9,10 @@ import SwiftUI
 
 @main
 struct OptieMonitorApp: App {
+    var viewModel = ViewModel()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environmentObject(viewModel)
         }
     }
 }

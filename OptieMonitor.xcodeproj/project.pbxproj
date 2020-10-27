@@ -3,23 +3,45 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		E830052D2548066400B2CA56 /* OptieMonitorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830052C2548066400B2CA56 /* OptieMonitorApp.swift */; };
-		E830052F2548066400B2CA56 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830052E2548066400B2CA56 /* ContentView.swift */; };
-		E83005312548066600B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005302548066600B2CA56 /* Assets.xcassets */; };
 		E83005342548066600B2CA56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005332548066600B2CA56 /* Preview Assets.xcassets */; };
+		E830055225480B2D00B2CA56 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830055125480B2D00B2CA56 /* ContentView.swift */; };
+		E830055F25480C5400B2CA56 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830055D25480C5400B2CA56 /* Models.swift */; };
+		E830056025480C5400B2CA56 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830055E25480C5400B2CA56 /* ViewModel.swift */; };
+		E830056C25480CB500B2CA56 /* IntraGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056425480CB500B2CA56 /* IntraGraphView.swift */; };
+		E830056D25480CB500B2CA56 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056525480CB500B2CA56 /* HeaderView.swift */; };
+		E830056E25480CB500B2CA56 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056625480CB500B2CA56 /* FooterView.swift */; };
+		E830056F25480CB500B2CA56 /* InterGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056725480CB500B2CA56 /* InterGraphView.swift */; };
+		E830057025480CB500B2CA56 /* InterdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056825480CB500B2CA56 /* InterdayView.swift */; };
+		E830057125480CB500B2CA56 /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056925480CB500B2CA56 /* RowView.swift */; };
+		E830057225480CB500B2CA56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056A25480CB500B2CA56 /* SettingsView.swift */; };
+		E830057325480CB500B2CA56 /* IntradayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056B25480CB500B2CA56 /* IntradayView.swift */; };
+		E830057925480D4100B2CA56 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = E830057825480D4100B2CA56 /* Charts */; };
+		E83005812548138100B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005802548138100B2CA56 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E83005292548066400B2CA56 /* OptieMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OptieMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E830052C2548066400B2CA56 /* OptieMonitorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptieMonitorApp.swift; sourceTree = "<group>"; };
-		E830052E2548066400B2CA56 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		E83005302548066600B2CA56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E83005332548066600B2CA56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E83005352548066600B2CA56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E830055125480B2D00B2CA56 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E830055425480B6300B2CA56 /* OptieMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OptieMonitor.entitlements; sourceTree = "<group>"; };
+		E830055D25480C5400B2CA56 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		E830055E25480C5400B2CA56 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		E830056425480CB500B2CA56 /* IntraGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntraGraphView.swift; sourceTree = "<group>"; };
+		E830056525480CB500B2CA56 /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		E830056625480CB500B2CA56 /* FooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		E830056725480CB500B2CA56 /* InterGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterGraphView.swift; sourceTree = "<group>"; };
+		E830056825480CB500B2CA56 /* InterdayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterdayView.swift; sourceTree = "<group>"; };
+		E830056925480CB500B2CA56 /* RowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowView.swift; sourceTree = "<group>"; };
+		E830056A25480CB500B2CA56 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		E830056B25480CB500B2CA56 /* IntradayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntradayView.swift; sourceTree = "<group>"; };
+		E83005802548138100B2CA56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -27,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E830057925480D4100B2CA56 /* Charts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,9 +76,9 @@
 			isa = PBXGroup;
 			children = (
 				E830052C2548066400B2CA56 /* OptieMonitorApp.swift */,
-				E830052E2548066400B2CA56 /* ContentView.swift */,
-				E83005302548066600B2CA56 /* Assets.xcassets */,
-				E83005352548066600B2CA56 /* Info.plist */,
+				E830057525480CBB00B2CA56 /* Views */,
+				E830056225480C5900B2CA56 /* Models */,
+				E83005852548147500B2CA56 /* Various */,
 				E83005322548066600B2CA56 /* Preview Content */,
 			);
 			path = OptieMonitor;
@@ -67,6 +90,41 @@
 				E83005332548066600B2CA56 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		E830056225480C5900B2CA56 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E830055D25480C5400B2CA56 /* Models.swift */,
+				E830055E25480C5400B2CA56 /* ViewModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E830057525480CBB00B2CA56 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E830055125480B2D00B2CA56 /* ContentView.swift */,
+				E830056B25480CB500B2CA56 /* IntradayView.swift */,
+				E830056825480CB500B2CA56 /* InterdayView.swift */,
+				E830056525480CB500B2CA56 /* HeaderView.swift */,
+				E830056925480CB500B2CA56 /* RowView.swift */,
+				E830056625480CB500B2CA56 /* FooterView.swift */,
+				E830056A25480CB500B2CA56 /* SettingsView.swift */,
+				E830056725480CB500B2CA56 /* InterGraphView.swift */,
+				E830056425480CB500B2CA56 /* IntraGraphView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E83005852548147500B2CA56 /* Various */ = {
+			isa = PBXGroup;
+			children = (
+				E830055425480B6300B2CA56 /* OptieMonitor.entitlements */,
+				E83005352548066600B2CA56 /* Info.plist */,
+				E83005802548138100B2CA56 /* Assets.xcassets */,
+			);
+			path = Various;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +143,9 @@
 			dependencies = (
 			);
 			name = OptieMonitor;
+			packageProductDependencies = (
+				E830057825480D4100B2CA56 /* Charts */,
+			);
 			productName = OptieMonitor;
 			productReference = E83005292548066400B2CA56 /* OptieMonitor.app */;
 			productType = "com.apple.product-type.application";
@@ -112,6 +173,9 @@
 				Base,
 			);
 			mainGroup = E83005202548066400B2CA56;
+			packageReferences = (
+				E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */,
+			);
 			productRefGroup = E830052A2548066400B2CA56 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -126,8 +190,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E83005812548138100B2CA56 /* Assets.xcassets in Resources */,
 				E83005342548066600B2CA56 /* Preview Assets.xcassets in Resources */,
-				E83005312548066600B2CA56 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,8 +202,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E830052F2548066400B2CA56 /* ContentView.swift in Sources */,
+				E830057025480CB500B2CA56 /* InterdayView.swift in Sources */,
+				E830057125480CB500B2CA56 /* RowView.swift in Sources */,
+				E830055F25480C5400B2CA56 /* Models.swift in Sources */,
+				E830056E25480CB500B2CA56 /* FooterView.swift in Sources */,
+				E830056D25480CB500B2CA56 /* HeaderView.swift in Sources */,
+				E830055225480B2D00B2CA56 /* ContentView.swift in Sources */,
+				E830056025480C5400B2CA56 /* ViewModel.swift in Sources */,
 				E830052D2548066400B2CA56 /* OptieMonitorApp.swift in Sources */,
+				E830057325480CB500B2CA56 /* IntradayView.swift in Sources */,
+				E830056F25480CB500B2CA56 /* InterGraphView.swift in Sources */,
+				E830056C25480CB500B2CA56 /* IntraGraphView.swift in Sources */,
+				E830057225480CB500B2CA56 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +341,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OptieMonitor/OptieMonitor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"OptieMonitor/Preview Content\"";
 				DEVELOPMENT_TEAM = V2LV7426WZ;
@@ -277,10 +352,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor.OptieMonitor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -289,6 +364,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = OptieMonitor/OptieMonitor.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"OptieMonitor/Preview Content\"";
 				DEVELOPMENT_TEAM = V2LV7426WZ;
@@ -299,10 +375,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor.OptieMonitor;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -328,6 +404,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swift-extensions/swiftui-charts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E830057825480D4100B2CA56 /* Charts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */;
+			productName = Charts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E83005212548066400B2CA56 /* Project object */;
 }
