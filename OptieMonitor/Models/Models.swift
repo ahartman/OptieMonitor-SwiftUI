@@ -5,24 +5,14 @@
 //  Created by André Hartman on 02/07/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
-import Foundation
 import SwiftUI
 
-var deviceTokenString: String = ""
-{
-    didSet{
-        let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
-        ViewModel().postJSONData(jsonObject, action: "apns")
-    }
-}
-var notificationSet = NotificationSetting()
 var notificationSetStale: Bool = false
 
 // set data path
 #if targetEnvironment(simulator)
-//let dataURL = "http://cake.local/orders.json?id=ahartman&action="
-let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
+let dataURL = "http://cake.local/orders.json?id=ahartman&action="
+//let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #else
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #endif

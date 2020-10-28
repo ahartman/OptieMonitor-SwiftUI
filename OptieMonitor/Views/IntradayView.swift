@@ -5,14 +5,12 @@
 //  Created by André Hartman on 01/07/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
 import SwiftUI
-import Combine
 
 struct IntradayView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State var showGraphView = false
-
+ 
     var body: some View {
         GeometryReader{ geometry in
             NavigationView {
@@ -28,7 +26,7 @@ struct IntradayView: View {
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 10)
                 .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
-                  .navigationBarItems(
+                .navigationBarItems(
                     trailing:
                         Button(
                             action:
@@ -40,14 +38,13 @@ struct IntradayView: View {
                 .onLongPressGesture(minimumDuration: 1)
                     {viewModel.generateData(action: "cleanOrder")}
                 .alert(isPresented: self.$viewModel.isMessage) {
-                    Alert(title: Text("AEX"), message: Text(self.viewModel.message), dismissButton: .default(Text("OK")))}
-                //.onAppear(perform: self.getLocalData)
+                    Alert(title: Text("AEX"),
+                          message: Text(self.viewModel.message),
+                          dismissButton: .default(Text("OK")))}
             }
             .sheet(isPresented: $showGraphView) {
                 IntraGraphView(showGraphView: self.$showGraphView)}
         }
-    }
-    func getLocalData() {
     }
 }
 

@@ -5,7 +5,6 @@
 //  Created by André Hartman on 06/07/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
 import SwiftUI
 
 struct RowView: View {

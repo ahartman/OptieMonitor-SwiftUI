@@ -5,7 +5,6 @@
 //  Created by André Hartman on 09/09/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
 import SwiftUI
 
 struct SettingsView: View {
@@ -38,10 +37,9 @@ struct SettingsView: View {
         }
         .onDisappear{
             if(notificationSetStale){
-                ViewModel().postJSONData(viewModel.notificationSet, action: "notificationSettings")
+                JSONclass().postJSONData(viewModel.notificationSet, action: "notificationSettings")
                 notificationSetStale = false
             }
-            //ViewModel().postNotificationSettings()
         }
     }
 

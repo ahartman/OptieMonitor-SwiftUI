@@ -5,7 +5,6 @@
 //  Created by André Hartman on 14/10/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
 import SwiftUI
 import Charts
 import Shapes

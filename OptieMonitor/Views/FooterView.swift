@@ -5,12 +5,11 @@
 //  Created by André Hartman on 04/08/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-
 import SwiftUI
 
 struct FooterView: View {
     // footerLine is passed as argument as it can be intraFooter or interfooter
-  var footerLine: FooterLine
+    var footerLine: FooterLine
     var geometry: GeometryProxy
 
     var body: some View {
@@ -30,9 +29,9 @@ struct FooterView: View {
     }
 }
 /*
-struct FooterView_Previews: PreviewProvider {
-    static var previews: some View {
-        FooterView()
-    }
-}
-*/
+ struct FooterView_Previews: PreviewProvider {
+ static var previews: some View {
+ FooterView()
+ }
+ }
+ */

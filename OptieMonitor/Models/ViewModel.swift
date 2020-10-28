@@ -5,14 +5,13 @@
     //  Created by André Hartman on 05/07/2020.
     //  Copyright © 2020 André Hartman. All rights reserved.
     //
-    import Foundation
     import SwiftUI
     
     class ViewModel: ObservableObject {
-        @Published var intraLines: [TableLine] = []
         init(){
             generateData(action: "currentOrder")
         }
+        @Published var intraLines: [TableLine] = []
         @Published var interLines: [TableLine] = []
         @Published var intraFooter = FooterLine()
         @Published var interFooter = FooterLine()
@@ -21,6 +20,7 @@
         @Published var interGraph = [String:Any]()
         @Published var caption: String = ""
         @Published var message: String = ""
+        {didSet{isMessage = true}}
         @Published var isMessage: Bool = false
         @Published var datetimeText: String = ""
         @Published var dataStale: Bool = false
@@ -87,16 +87,12 @@
             var temp: Double
             var tempInt: Int
             var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
-            
             var linesFormatted = [TableLine]()
-            var switchFirst: Bool = true
-            
-            for line in lines {
+
+            for (index, line) in lines.enumerated() {
                 var lineFormatted = TableLine()
-                if(switchFirst){
+                if(index == 0){
                     firstLine = line
-                    switchFirst = false
-                    
                     temp = (line.callValue + line.putValue) * line.nrContracts
                     lineFormatted.orderValueText = Formatter.amount0.string(for: temp)!
                     lineFormatted.orderValueColor = .black
@@ -137,23 +133,24 @@
             getJsonData(action: action) { result in
                 switch result{
                 case .success(let result):
-                    self.intraLines = self.formatTableView(lines: result.intraday)
                     self.interLines = self.formatTableView(lines: result.interday)
-                    self.intraGraph = self.formatIntraGraph(lines: result.intraday)
-                    self.interGraph = self.formatInterGraph(lines: result.interday)
-                    self.intraFooter = self.formatFooter(lines: result.intraday)
                     self.interFooter = self.formatFooter(lines: result.interday)
+                    self.interGraph = self.formatInterGraph(lines: result.interday)
 
+                    self.intraLines = self.formatTableView(lines: result.intraday)
+                    self.intraFooter = self.formatFooter(lines: result.intraday)
                     self.intraInterLines = []
                     self.intraInterLines.append(self.interLines.first!)
                     self.intraInterLines.append(self.interLines.last!)
+                    self.intraGraph = self.formatIntraGraph(lines: result.intraday)
 
                     self.caption = result.caption
                     self.datetimeText = self.formatDate(dateIn: result.datetime)
                     self.message = result.message ?? ""
-                    if(self.message.count > 0) {self.isMessage = true}
                     self.notificationSet = result.notificationSettings
+
                     self.dataStale = false
+                    self.isMessage = false
                     notificationSetStale = false
                 case .failure(let error):
                     switch error{
@@ -168,16 +165,16 @@
             }
         }
         func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
-            print("JsonData")
             dataStale = true
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
             
-            let url = URL(string: dataURL + action + "&apns=" + deviceTokenString)!
-            //print(url)
-            
+            let url = URL(string: dataURL + action)!
+            print("JsonData from: \(url)")
+
             URLSession.shared.dataTask(with: url) {data, response, error in
                 DispatchQueue.main.async{
+                    //print("JSON String: \(String(data: data!, encoding: .utf8))")
                     if let incoming = data {
                         do {
                             let incomingData = try decoder.decode(RestData.self, from: incoming)
@@ -207,6 +204,41 @@
             catch {
             }
             
+            let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
+                if let error = error {
+                    print ("Error: \(error)")
+
+                }
+                guard let response = response as? HTTPURLResponse,
+                      (200...299).contains(response.statusCode) else {
+                    print ("Server error")
+                    return
+                }
+                if let mimeType = response.mimeType,
+                   mimeType == "application/json",
+                   let data = data,
+                   let dataString = String(data: data, encoding: .utf8) {
+                    print ("Response to POST: \(dataString)")
+                }
+            }
+            task.resume()
+        }
+    }
+
+    class JSONclass{
+        func postJSONData<T: Codable>(_ value: T, action: String) {
+            let url = URL(string: dataURL + action)!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            var jsonData = Data()
+            do {
+                jsonData = try JSONEncoder().encode(value)
+            }
+            catch {
+            }
+
             let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
                 if let error = error {
                     print ("Error: \(error)")

@@ -4,7 +4,6 @@
 //
 //  Created by André Hartman on 27/10/2020.
 //
-
 import SwiftUI
 
 struct LocalNotificationDemoView: View {

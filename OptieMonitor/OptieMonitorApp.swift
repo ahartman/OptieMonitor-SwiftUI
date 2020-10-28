@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import os
 
 @main
 struct OptieMonitorApp: App {
-    var viewModel = ViewModel()
-
-    @StateObject var notificationCenter = NotificationCenter()
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    @StateObject var notificationCenter = NotificationCenter()
+
+    var viewModel = ViewModel()
 
     var body: some Scene {
         WindowGroup {
@@ -57,12 +56,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
     //No callback in simulator -- must use device to get valid push token
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
-        print("Registered deviceTokenString: \(deviceTokenString)")
+        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        print("Registering deviceTokenString: \(deviceTokenString)")
+        let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
+        JSONclass().postJSONData(jsonObject, action: "apns")
     }
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print(error.localizedDescription)
+        print("Failed to register for notifications: \(error.localizedDescription)")
     }
 }
 
@@ -91,9 +92,10 @@ class LocalNotification: ObservableObject {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (allowed, error) in
             //This callback does not trigger on main loop be careful
             if allowed {
-                os_log(.debug, "Allowed")
+                print("Notifications allowed")
+
             } else {
-                os_log(.debug, "Error")
+                print("Notifications not allowed")
             }
         }
     }
@@ -105,41 +107,9 @@ class LocalNotification: ObservableObject {
         content.body = body
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: when, repeats: false)
-        let request = UNNotificationRequest.init(identifier: "localNotificatoin", content: content, trigger: trigger)
+        let request = UNNotificationRequest.init(identifier: "localNotification", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
 
     }
 }
-/*
- struct LocalNotificationDemoView: View {
- @StateObject var localNotification = LocalNotification()
- @ObservedObject var notificationCenter: NotificationCenter
- var body: some View {
- VStack {
- Button("schedule Notification") {
- localNotification.setLocalNotification(title: "title",
- subtitle: "Subtitle",
- body: "this is nody",
- when: 10)
- }
 
- if let dumbData = notificationCenter.dumbData  {
- Text("Old Notification Payload:")
- Text(dumbData.actionIdentifier)
- Text(dumbData.notification.request.content.body)
- Text(dumbData.notification.request.content.title)
- Text(dumbData.notification.request.content.subtitle)
- }
- }
- }
- }
- */
-extension UIApplicationDelegate {
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        print("Successfully registered for notifications!")
-    }
-
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register for notifications: \(error.localizedDescription)")
-    }
-}
