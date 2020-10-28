@@ -10,7 +10,7 @@ import SwiftUI
 struct IntradayView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State var showGraphView = false
- 
+
     var body: some View {
         GeometryReader{ geometry in
             NavigationView {
@@ -28,9 +28,7 @@ struct IntradayView: View {
                 .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
                 .navigationBarItems(
                     trailing:
-                        Button(
-                            action:
-                                {self.showGraphView.toggle()})
+                        Button(action: {self.showGraphView.toggle()})
                             {Image(systemName: "chart.bar")}
                 )
                 .onTapGesture(count: 1)

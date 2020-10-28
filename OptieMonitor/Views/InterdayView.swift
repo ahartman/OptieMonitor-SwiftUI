@@ -29,9 +29,7 @@ struct InterdayView: View {
                 .navigationBarTitle("Interday", displayMode: .inline)
                 .navigationBarItems(
                     trailing:
-                        Button(
-                            action:
-                                {self.showGraphView.toggle()})
+                        Button(action: {self.showGraphView.toggle()})
                             {Image(systemName: "chart.bar")}
                 )
             }

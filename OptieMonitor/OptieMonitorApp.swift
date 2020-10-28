@@ -11,6 +11,7 @@ import SwiftUI
 struct OptieMonitorApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var notificationCenter = NotificationCenter()
+    @StateObject var localNotification = LocalNotification()
 
     var viewModel = ViewModel()
 
@@ -31,11 +32,6 @@ struct OptieMonitorApp: App {
                     .tabItem{
                         Image(systemName: "gear")
                         Text("Notificaties")
-                    }
-                LocalNotificationDemoView(notificationCenter: notificationCenter)
-                    .tabItem{
-                        Image(systemName: "gear")
-                        Text("Test")
                     }
             }
             .environmentObject(viewModel)
@@ -91,12 +87,7 @@ class LocalNotification: ObservableObject {
 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (allowed, error) in
             //This callback does not trigger on main loop be careful
-            if allowed {
-                print("Notifications allowed")
-
-            } else {
-                print("Notifications not allowed")
-            }
+            print(allowed ? "Notifications allowed" : "Notifications not allowed")
         }
     }
 

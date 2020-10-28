@@ -17,7 +17,7 @@ struct InterGraphView: View {
         GeometryReader{ geometry in
             NavigationView {
                 HStack{
-                   ZStack {
+                    ZStack {
                         Chart(data: self.viewModel.interGraph["columns"] as! [[CGFloat]])
                             .chartStyle(
                                 StackedColumnChartStyle(colors: [.green, .blue])
@@ -40,15 +40,13 @@ struct InterGraphView: View {
                             )
                     }
                     .cornerRadius(16)
-                   .padding()
+                    .padding()
                 }
                 .navigationBarTitle("Grafiek", displayMode: .inline)
                 .navigationBarItems(trailing:
-                                        Button(action: {
-                                            self.showGraphView = false
-                                        })
-                                        {Image(systemName: "table")})
-           }
+                                        Button(action: {self.showGraphView = false})
+                                            {Image(systemName: "table")})
+            }
         }
     }
 }

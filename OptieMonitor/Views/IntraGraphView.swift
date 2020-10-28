@@ -37,10 +37,8 @@ struct IntraGraphView: View {
             .padding()
             .navigationBarTitle("Grafiek", displayMode: .inline)
             .navigationBarItems(trailing:
-                                    Button(action: {
-                                        self.showGraphView = false
-                                    })
-                                    {Image(systemName: "table")})
+                                    Button(action: {self.showGraphView = false})
+                                        {Image(systemName: "table")})
         }    }
 }
 /*

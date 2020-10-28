@@ -130,7 +130,8 @@
         }
         
         func generateData(action: String) -> Void {
-            getJsonData(action: action) { result in
+            dataStale = true
+            JSONclass().getJsonData(action: action) { result in
                 switch result{
                 case .success(let result):
                     self.interLines = self.formatTableView(lines: result.interday)
@@ -164,11 +165,13 @@
                 }
             }
         }
+    }
+
+    class JSONclass{
         func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
-            dataStale = true
             let decoder = JSONDecoder()
             decoder.dateDecodingStrategy = .iso8601
-            
+
             let url = URL(string: dataURL + action)!
             print("JsonData from: \(url)")
 
@@ -178,7 +181,7 @@
                     if let incoming = data {
                         do {
                             let incomingData = try decoder.decode(RestData.self, from: incoming)
-                            //print(incomingData)
+                            print(incomingData)
                             completion(.success(incomingData))
                         } catch {
                             print("JSON error:", error)
@@ -191,41 +194,7 @@
                 }
             }.resume()
         }
-        func postJSONData<T: Codable>(_ value: T, action: String) {
-            let url = URL(string: dataURL + action)!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            
-            var jsonData = Data()
-            do {
-                jsonData = try JSONEncoder().encode(value)
-            }
-            catch {
-            }
-            
-            let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
-                if let error = error {
-                    print ("Error: \(error)")
 
-                }
-                guard let response = response as? HTTPURLResponse,
-                      (200...299).contains(response.statusCode) else {
-                    print ("Server error")
-                    return
-                }
-                if let mimeType = response.mimeType,
-                   mimeType == "application/json",
-                   let data = data,
-                   let dataString = String(data: data, encoding: .utf8) {
-                    print ("Response to POST: \(dataString)")
-                }
-            }
-            task.resume()
-        }
-    }
-
-    class JSONclass{
         func postJSONData<T: Codable>(_ value: T, action: String) {
             let url = URL(string: dataURL + action)!
             var request = URLRequest(url: url)
