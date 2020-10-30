@@ -9,8 +9,21 @@
     
     class ViewModel: ObservableObject {
         init(){
+            if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
+                print("UserDefaults found")
+                dataStale = true
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    let savedData = try decoder.decode(RestData.self, from: data)
+                    unpackJSON(result: savedData)
+                } catch {
+                    print("JSON error from User Defaults:", error)
+                }
+            }
             generateData(action: "currentOrder")
         }
+
         @Published var intraLines: [TableLine] = []
         @Published var interLines: [TableLine] = []
         @Published var intraFooter = FooterLine()
@@ -19,11 +32,16 @@
         @Published var intraGraph = [String:Any]()
         @Published var interGraph = [String:Any]()
         @Published var caption: String = ""
-        @Published var message: String = ""
-        {didSet{isMessage = true}}
+        @Published var message: String?
+        {didSet{
+            if message != nil {
+            isMessage = true
+                print("Incoming message: \(String(describing: message))")
+            }
+        }}
         @Published var isMessage: Bool = false
         @Published var datetimeText: String = ""
-        @Published var dataStale: Bool = false
+        @Published var dataStale: Bool = true
         @Published var notificationSet = NotificationSetting()
         {didSet{notificationSetStale = true}}
 
@@ -35,7 +53,7 @@
         }
         func formatInterGraph(lines: [QuoteLine]) -> [String: Any] {
             var columns: [[CGFloat]] = []
-            
+
             let verticalScalar = 1.0
             let maxValue = lines.compactMap({($0.callValue + $0.putValue) * $0.nrContracts}).max()!/(2 * verticalScalar)
             for line in lines.reversed() {
@@ -43,18 +61,18 @@
                 let putValue = CGFloat(line.putValue*line.nrContracts/maxValue)
                 columns.append([callValue,putValue])
             }
-            
+
             let lineIndex = lines.compactMap({Double($0.indexValue) - Double(lines[0].indexValue)})
             let rangeOfIndex = 0.5 / max(abs(lineIndex.max()!),abs(lineIndex.min()!))
             let index = lineIndex.compactMap({CGFloat($0 * rangeOfIndex + 0.5)})
-            
+
             return (["columns": columns, "line": index])
         }
         func formatIntraGraph(lines: [QuoteLine]) -> [String:Any] {
             let lineCalls = lines.compactMap({$0.callValue - lines[0].callValue})
             let linePuts = lines.compactMap({$0.putValue - lines[0].putValue})
             let lineTotals = lines.compactMap({$0.callValue + $0.putValue - lines[0].callValue - lines[0].putValue})
-            
+
             let maxOfValues = 0.5 / max(
                 abs(lineCalls.max()!),
                 abs(linePuts.max()!),
@@ -63,18 +81,18 @@
                 abs(linePuts.min()!),
                 abs(lineTotals.min()!)
             )
-            
+
             let calls = lineCalls.compactMap({CGFloat($0 * maxOfValues + 0.5)})
             let puts = linePuts.compactMap({CGFloat($0 * maxOfValues + 0.5)})
             let totals = lineTotals.compactMap({CGFloat($0 * maxOfValues + 0.5)})
-            
+
             return (["call": calls, "put": puts, "total": totals])
         }
         func formatFooter(lines: [QuoteLine]) -> FooterLine {
             let firstLine = lines.first
             let lastLine = lines.last
             var footer = FooterLine(callPercent:"",putPercent:"",orderPercent:"",index:"")
-            
+
             footer.callPercent = Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue)-1)!
             footer.putPercent = Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue)-1)!
             let tempLast = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
@@ -128,28 +146,32 @@
             }
             return deltaColor
         }
-        
+
+        func unpackJSON(result: RestData) -> Void {
+            self.interLines = self.formatTableView(lines: result.interday)
+            self.interFooter = self.formatFooter(lines: result.interday)
+            self.interGraph = self.formatInterGraph(lines: result.interday)
+
+            self.intraLines = self.formatTableView(lines: result.intraday)
+            self.intraFooter = self.formatFooter(lines: result.intraday)
+            self.intraInterLines = []
+            self.intraInterLines.append(self.interLines.first!)
+            self.intraInterLines.append(self.interLines.last!)
+            self.intraGraph = self.formatIntraGraph(lines: result.intraday)
+
+            self.caption = result.caption
+            self.datetimeText = self.formatDate(dateIn: result.datetime)
+            self.message = result.message
+            self.notificationSet = result.notificationSettings
+        }
+
+
         func generateData(action: String) -> Void {
             dataStale = true
-            JSONclass().getJsonData(action: action) { result in
-                switch result{
-                case .success(let result):
-                    self.interLines = self.formatTableView(lines: result.interday)
-                    self.interFooter = self.formatFooter(lines: result.interday)
-                    self.interGraph = self.formatInterGraph(lines: result.interday)
-
-                    self.intraLines = self.formatTableView(lines: result.intraday)
-                    self.intraFooter = self.formatFooter(lines: result.intraday)
-                    self.intraInterLines = []
-                    self.intraInterLines.append(self.interLines.first!)
-                    self.intraInterLines.append(self.interLines.last!)
-                    self.intraGraph = self.formatIntraGraph(lines: result.intraday)
-
-                    self.caption = result.caption
-                    self.datetimeText = self.formatDate(dateIn: result.datetime)
-                    self.message = result.message ?? ""
-                    self.notificationSet = result.notificationSettings
-
+            JSONclass().getJsonData(action: action) { [self] incomingData in
+                switch incomingData{
+                case .success(let incomingData):
+                    self.unpackJSON(result: incomingData)
                     self.dataStale = false
                     self.isMessage = false
                     notificationSetStale = false
@@ -169,9 +191,6 @@
 
     class JSONclass{
         func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
-
             let url = URL(string: dataURL + action)!
             print("JsonData from: \(url)")
 
@@ -180,8 +199,11 @@
                     //print("JSON String: \(String(data: data!, encoding: .utf8))")
                     if let incoming = data {
                         do {
+                            UserDefaults.standard.set(incoming, forKey: "OptieMonitor")
+                            let decoder = JSONDecoder()
+                            decoder.dateDecodingStrategy = .iso8601
                             let incomingData = try decoder.decode(RestData.self, from: incoming)
-                            print(incomingData)
+                            //print(incomingData)
                             completion(.success(incomingData))
                         } catch {
                             print("JSON error:", error)
@@ -206,12 +228,12 @@
                 jsonData = try JSONEncoder().encode(value)
             }
             catch {
+                print("Encoding problem")
             }
 
             let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
                 if let error = error {
                     print ("Error: \(error)")
-
                 }
                 guard let response = response as? HTTPURLResponse,
                       (200...299).contains(response.statusCode) else {

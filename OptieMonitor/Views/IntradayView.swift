@@ -37,7 +37,7 @@ struct IntradayView: View {
                     {viewModel.generateData(action: "cleanOrder")}
                 .alert(isPresented: self.$viewModel.isMessage) {
                     Alert(title: Text("AEX"),
-                          message: Text(self.viewModel.message),
+                          message: Text(self.viewModel.message ?? ""),
                           dismissButton: .default(Text("OK")))}
             }
             .sheet(isPresented: $showGraphView) {
