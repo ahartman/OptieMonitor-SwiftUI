@@ -9,7 +9,8 @@
     
     class ViewModel: ObservableObject {
         init(){
-            if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
+            if let data = UserDefaults.standard.data(forKey: "OptieMonitor")// retrieve from UserDefaults
+            {
                 print("UserDefaults found")
                 dataStale = true
                 do {
@@ -35,7 +36,7 @@
         @Published var message: String?
         {didSet{
             if message != nil {
-            isMessage = true
+                isMessage = true
                 print("Incoming message: \(String(describing: message))")
             }
         }}
@@ -199,7 +200,7 @@
                     //print("JSON String: \(String(data: data!, encoding: .utf8))")
                     if let incoming = data {
                         do {
-                            UserDefaults.standard.set(incoming, forKey: "OptieMonitor")
+                            UserDefaults.standard.set(incoming, forKey: "OptieMonitor") // persist in UserDefaults
                             let decoder = JSONDecoder()
                             decoder.dateDecodingStrategy = .iso8601
                             let incomingData = try decoder.decode(RestData.self, from: incoming)

@@ -17,27 +17,33 @@ struct HeaderView: View {
                 .modifier((StaleModifier()))
                 .padding(.bottom)
             HStack {
-                Text("\(self.viewModel.datetimeText)").modifier(TextModifier())
-                Text("Call").modifier(TextModifier())
+                Text("\(self.viewModel.datetimeText)")
+                    .modifier(TextModifier())
+                Text("Call")
+                    .modifier(TextModifier())
                 if(geometry.size.width > geometry.size.height ) {
-                    Text("∂").modifier(TextModifier())
+                    Text("∂")
+                        .modifier(TextModifier())
                 }
                 Text("Put")
                     .modifier(TextModifier())
                 if(geometry.size.width > geometry.size.height ) {
-                    Text("∂").modifier(TextModifier())
+                    Text("∂")
+                        .modifier(TextModifier())
                 }
-                Text("€").modifier(TextModifier())
-                Text("Index").modifier(TextModifier())
+                Text("€")
+                    .modifier(TextModifier())
+                Text("Index")
+                    .modifier(TextModifier())
             }
         }
     }
 }
- /*
+/*
  struct HeaderView_Previews: PreviewProvider {
-    static let viewModel = ViewModel()
-    static var previews: some View {
-        HeaderView().environmentObject(viewModel)
-    }
+ static let viewModel = ViewModel()
+ static var previews: some View {
+ HeaderView().environmentObject(viewModel)
+ }
  }
  */

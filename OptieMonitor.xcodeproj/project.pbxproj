@@ -21,7 +21,6 @@
 		E830057325480CB500B2CA56 /* IntradayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056B25480CB500B2CA56 /* IntradayView.swift */; };
 		E830057925480D4100B2CA56 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = E830057825480D4100B2CA56 /* Charts */; };
 		E83005812548138100B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005802548138100B2CA56 /* Assets.xcassets */; };
-		E8D7AC88254AC73F008ECE41 /* Persist.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D7AC87254AC73F008ECE41 /* Persist.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,7 +40,6 @@
 		E830056A25480CB500B2CA56 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E830056B25480CB500B2CA56 /* IntradayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntradayView.swift; sourceTree = "<group>"; };
 		E83005802548138100B2CA56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E8D7AC87254AC73F008ECE41 /* Persist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persist.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +97,6 @@
 			children = (
 				E830055D25480C5400B2CA56 /* Models.swift */,
 				E830055E25480C5400B2CA56 /* ViewModel.swift */,
-				E8D7AC87254AC73F008ECE41 /* Persist.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -109,8 +106,8 @@
 			children = (
 				E830056B25480CB500B2CA56 /* IntradayView.swift */,
 				E830056425480CB500B2CA56 /* IntraGraphView.swift */,
-				E830056825480CB500B2CA56 /* InterdayView.swift */,
 				E830056725480CB500B2CA56 /* InterGraphView.swift */,
+				E830056825480CB500B2CA56 /* InterdayView.swift */,
 				E830056525480CB500B2CA56 /* HeaderView.swift */,
 				E830056925480CB500B2CA56 /* RowView.swift */,
 				E830056625480CB500B2CA56 /* FooterView.swift */,
@@ -196,7 +193,6 @@
 			files = (
 				E830057025480CB500B2CA56 /* InterdayView.swift in Sources */,
 				E830057125480CB500B2CA56 /* RowView.swift in Sources */,
-				E8D7AC88254AC73F008ECE41 /* Persist.swift in Sources */,
 				E830055F25480C5400B2CA56 /* Models.swift in Sources */,
 				E830056E25480CB500B2CA56 /* FooterView.swift in Sources */,
 				E830056D25480CB500B2CA56 /* HeaderView.swift in Sources */,
