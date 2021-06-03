@@ -12,6 +12,7 @@ struct OptieMonitorApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var notificationCenter = NotificationCenter()
     @StateObject var localNotification = LocalNotification()
+    @Environment(\.scenePhase) var scenePhase
 
     var viewModel = ViewModel()
 
@@ -36,6 +37,14 @@ struct OptieMonitorApp: App {
             }
             .environmentObject(viewModel)
         }
+        .onChange(of: scenePhase) { (phase) in
+            switch phase {
+            case .active: print("ScenePhase: active")
+            case .background: print("ScenePhase: background")
+            case .inactive: print("ScenePhase: inactive")
+            @unknown default: print("ScenePhase: unexpected state")
+                    }
+        }
     }
 }
 
@@ -45,6 +54,7 @@ extension UIApplication {
     }
 }
 
+// implement AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         application.registerForRemoteNotifications()
@@ -57,9 +67,11 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
         JSONclass().postJSONData(jsonObject, action: "apns")
     }
-
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for notifications: \(error.localizedDescription)")
+    }
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        print("enter foreground")
     }
 }
 
