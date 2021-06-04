@@ -37,14 +37,20 @@ struct OptieMonitorApp: App {
             }
             .environmentObject(viewModel)
         }
-        .onChange(of: scenePhase) { (phase) in
+         /*
+         .onChange(of: scenePhase) { (phase) in
             switch phase {
-            case .active: print("ScenePhase: active")
-            case .background: print("ScenePhase: background")
-            case .inactive: print("ScenePhase: inactive")
+            case .active:
+                print("ScenePhase: active")
+                ViewModel().generateDummy()
+            case .background:
+                _ = 0
+            case .inactive:
+                _ = 0
             @unknown default: print("ScenePhase: unexpected state")
                     }
         }
+         */
     }
 }
 

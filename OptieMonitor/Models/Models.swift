@@ -68,7 +68,9 @@ struct TableLine {
     var indexText: String = ""
 }
 
-struct FooterLine {
+struct FooterLine: Hashable {
+    let id = UUID()
+    var label: String = ""
     var callPercent: String = ""
     var putPercent: String = ""
     var orderPercent: String = ""
@@ -133,7 +135,7 @@ struct StaleModifier: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .frame(minWidth: 0, maxWidth: .infinity)
-            .font(.footnote)
             .foregroundColor(viewModel.dataStale ? .red : .secondary)
+            .font(.footnote.weight(viewModel.dataStale ? .bold : .regular))
     }
 }

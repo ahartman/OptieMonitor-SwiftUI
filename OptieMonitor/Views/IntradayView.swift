@@ -10,16 +10,16 @@ import SwiftUI
 struct IntradayView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State var showGraphView = false
+    @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
         GeometryReader{ geometry in
             NavigationView {
                 List{
-                    Section(header: HeaderView(geometry: geometry),
-                            footer: FooterView(footerLine: self.viewModel.interFooter, geometry: geometry))
-                    {ForEach(self.viewModel.intraInterLines, id:\.id) {quote in
-                        RowView(quote: quote, geometry: geometry)}}
-                    Section(header:  Text("Vandaag").modifier(TextModifier()),footer: FooterView(footerLine: self.viewModel.intraFooter, geometry: geometry))
+                    Section(
+                        header: HeaderView(geometry: geometry),
+                        footer: FooterView(footerLines: self.viewModel.intraFooter, geometry: geometry)
+                    )
                     {ForEach(self.viewModel.intraLines, id:\.id) {quote in
                         RowView(quote: quote, geometry: geometry)}}
                 }
@@ -40,11 +40,23 @@ struct IntradayView: View {
                           message: Text(self.viewModel.message ?? ""),
                           dismissButton: .default(Text("OK")))}
             }
+            .onChange(of: scenePhase) { (phase) in
+                switch phase {
+                case .active:
+                    viewModel.generateData(action: "currentOrder")
+                case .background:
+                    _ = 0
+                case .inactive:
+                    _ = 0
+                @unknown default: print("ScenePhase: unexpected state")
+                }
+            }
             .sheet(isPresented: $showGraphView) {
                 IntraGraphView(showGraphView: self.$showGraphView)}
         }
     }
 }
+
 
 struct IntradayView_Previews: PreviewProvider {
     static let viewModel = ViewModel()

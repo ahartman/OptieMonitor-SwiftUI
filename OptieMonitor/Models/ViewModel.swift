@@ -11,15 +11,14 @@
         init(){
             if let data = UserDefaults.standard.data(forKey: "OptieMonitor")// retrieve from UserDefaults
             {
-                print("UserDefaults found")
-                dataStale = true
+                //print("UserDefaults saved data found")
                 do {
                     let decoder = JSONDecoder()
                     decoder.dateDecodingStrategy = .iso8601
                     let savedData = try decoder.decode(RestData.self, from: data)
                     unpackJSON(result: savedData)
                 } catch {
-                    print("JSON error from User Defaults:", error)
+                    print("JSON error from UserDefaults:", error)
                 }
             }
             generateData(action: "currentOrder")
@@ -27,12 +26,8 @@
 
         @Published var intraLines: [TableLine] = []
         @Published var interLines: [TableLine] = []
-        @Published var intraFooter = FooterLine()
-        @Published var interFooter = FooterLine()
-        @Published var intraInterLines: [TableLine] = []
         @Published var intraGraph = [String:Any]()
         @Published var interGraph = [String:Any]()
-        @Published var caption: String = ""
         @Published var message: String?
         {didSet{
             if message != nil {
@@ -41,10 +36,14 @@
             }
         }}
         @Published var isMessage: Bool = false
-        @Published var datetimeText: String = ""
         @Published var dataStale: Bool = true
         @Published var notificationSet = NotificationSetting()
         {didSet{notificationSetStale = true}}
+
+        var intraFooter: [FooterLine] = []
+        var interFooter: [FooterLine] = []
+        var caption: String = ""
+        var datetimeText: String = ""
 
         func formatDate(dateIn: Date) -> String {
             let formatter = DateFormatter()
@@ -86,20 +85,35 @@
             let calls = lineCalls.compactMap({CGFloat($0 * maxOfValues + 0.5)})
             let puts = linePuts.compactMap({CGFloat($0 * maxOfValues + 0.5)})
             let totals = lineTotals.compactMap({CGFloat($0 * maxOfValues + 0.5)})
-
             return (["call": calls, "put": puts, "total": totals])
         }
-        func formatFooter(lines: [QuoteLine]) -> FooterLine {
+
+        func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
             let firstLine = lines.first
             let lastLine = lines.last
-            var footer = FooterLine(callPercent:"",putPercent:"",orderPercent:"",index:"")
+            var footer = [FooterLine]()
 
-            footer.callPercent = Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue)-1)!
-            footer.putPercent = Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue)-1)!
             let tempLast = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
             let tempFirst = (firstLine!.callValue + firstLine!.putValue) * firstLine!.nrContracts
-            footer.orderPercent = Formatter.percentage.string(for: (tempLast/tempFirst)-1)!
-            footer.index = String(lastLine!.indexValue)
+            footer.append(FooterLine(
+                label: sender == "intra" ? "Nu": "",
+                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue)-1)!,
+                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue)-1)!,
+                orderPercent: Formatter.percentage.string(for: (tempLast/tempFirst)-1)!,
+                index: String(lastLine!.indexValue)
+            ))
+
+            if sender == "intra" {
+                let tempLast1 = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
+                let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
+                footer.append(FooterLine(
+                    label: sender == "intra" ? "Order" : "",
+                    callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue)-1)!,
+                    putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue)-1)!,
+                    orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1)-1)!,
+                    index: ""
+                ))
+            }
             return footer
         }
         func formatTableView(lines: [QuoteLine]) -> [TableLine]{
@@ -150,14 +164,11 @@
 
         func unpackJSON(result: RestData) -> Void {
             self.interLines = self.formatTableView(lines: result.interday)
-            self.interFooter = self.formatFooter(lines: result.interday)
+            self.interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!, sender: "inter")
             self.interGraph = self.formatInterGraph(lines: result.interday)
 
             self.intraLines = self.formatTableView(lines: result.intraday)
-            self.intraFooter = self.formatFooter(lines: result.intraday)
-            self.intraInterLines = []
-            self.intraInterLines.append(self.interLines.first!)
-            self.intraInterLines.append(self.interLines.last!)
+            self.intraFooter = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
             self.intraGraph = self.formatIntraGraph(lines: result.intraday)
 
             self.caption = result.caption
@@ -165,7 +176,6 @@
             self.message = result.message
             self.notificationSet = result.notificationSettings
         }
-
 
         func generateData(action: String) -> Void {
             dataStale = true
@@ -204,7 +214,7 @@
                             let decoder = JSONDecoder()
                             decoder.dateDecodingStrategy = .iso8601
                             let incomingData = try decoder.decode(RestData.self, from: incoming)
-                            //print(incomingData)
+
                             completion(.success(incomingData))
                         } catch {
                             print("JSON error:", error)
@@ -231,7 +241,7 @@
             catch {
                 print("Encoding problem")
             }
-
+            
             let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
                 if let error = error {
                     print ("Error: \(error)")
