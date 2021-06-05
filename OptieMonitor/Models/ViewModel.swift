@@ -33,6 +33,8 @@
             if message != nil {
                 isMessage = true
                 print("Incoming message: \(String(describing: message))")
+            } else {
+                isMessage = false
             }
         }}
         @Published var isMessage: Bool = false

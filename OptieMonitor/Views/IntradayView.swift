@@ -7,7 +7,7 @@
 //
 import SwiftUI
 
-struct IntradayView: View {
+ struct IntradayView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State var showGraphView = false
     @Environment(\.scenePhase) var scenePhase
@@ -35,10 +35,6 @@ struct IntradayView: View {
                     {viewModel.generateData(action: "currentOrder")}
                 .onLongPressGesture(minimumDuration: 1)
                     {viewModel.generateData(action: "cleanOrder")}
-                .alert(isPresented: self.$viewModel.isMessage) {
-                    Alert(title: Text("AEX"),
-                          message: Text(self.viewModel.message ?? ""),
-                          dismissButton: .default(Text("OK")))}
             }
             .onChange(of: scenePhase) { (phase) in
                 switch phase {
@@ -51,6 +47,10 @@ struct IntradayView: View {
                 @unknown default: print("ScenePhase: unexpected state")
                 }
             }
+            .alert(isPresented: self.$viewModel.isMessage) {
+                Alert(title: Text("AEX"),
+                      message: Text(self.viewModel.message ?? ""),
+                      dismissButton: .default(Text("OK")))}
             .sheet(isPresented: $showGraphView) {
                 IntraGraphView(showGraphView: self.$showGraphView)}
         }
@@ -64,4 +64,3 @@ struct IntradayView_Previews: PreviewProvider {
         IntradayView().environmentObject(viewModel)
     }
 }
-

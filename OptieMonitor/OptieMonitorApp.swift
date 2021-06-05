@@ -12,7 +12,6 @@ struct OptieMonitorApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var notificationCenter = NotificationCenter()
     @StateObject var localNotification = LocalNotification()
-    @Environment(\.scenePhase) var scenePhase
 
     var viewModel = ViewModel()
 
@@ -37,20 +36,6 @@ struct OptieMonitorApp: App {
             }
             .environmentObject(viewModel)
         }
-         /*
-         .onChange(of: scenePhase) { (phase) in
-            switch phase {
-            case .active:
-                print("ScenePhase: active")
-                ViewModel().generateDummy()
-            case .background:
-                _ = 0
-            case .inactive:
-                _ = 0
-            @unknown default: print("ScenePhase: unexpected state")
-                    }
-        }
-         */
     }
 }
 
