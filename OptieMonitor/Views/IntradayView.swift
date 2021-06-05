@@ -7,7 +7,7 @@
 //
 import SwiftUI
 
- struct IntradayView: View {
+struct IntradayView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State var showGraphView = false
     @Environment(\.scenePhase) var scenePhase
@@ -15,26 +15,28 @@ import SwiftUI
     var body: some View {
         GeometryReader{ geometry in
             NavigationView {
-                List{
-                    Section(
-                        header: HeaderView(geometry: geometry),
-                        footer: FooterView(footerLines: self.viewModel.intraFooter, geometry: geometry)
+                VStack {
+                    List{
+                        Section(
+                            header: HeaderView(geometry: geometry),
+                            footer: FooterView(footerLines: self.viewModel.intraFooter, geometry: geometry)
+                        )
+                        {ForEach(self.viewModel.intraLines, id:\.id) {quote in
+                            RowView(quote: quote, geometry: geometry)}}
+                    }
+                    .listStyle(GroupedListStyle())
+                    .environment(\.defaultMinListRowHeight, 10)
+                    .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
+                    .navigationBarItems(
+                        trailing:
+                            Button(action: {self.showGraphView.toggle()})
+                                {Image(systemName: "chart.bar")}
                     )
-                    {ForEach(self.viewModel.intraLines, id:\.id) {quote in
-                        RowView(quote: quote, geometry: geometry)}}
+                    .onTapGesture(count: 1)
+                        {viewModel.generateData(action: "currentOrder")}
+                    .onLongPressGesture(minimumDuration: 1)
+                        {viewModel.generateData(action: "cleanOrder")}
                 }
-                .listStyle(GroupedListStyle())
-                .environment(\.defaultMinListRowHeight, 10)
-                .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
-                .navigationBarItems(
-                    trailing:
-                        Button(action: {self.showGraphView.toggle()})
-                            {Image(systemName: "chart.bar")}
-                )
-                .onTapGesture(count: 1)
-                    {viewModel.generateData(action: "currentOrder")}
-                .onLongPressGesture(minimumDuration: 1)
-                    {viewModel.generateData(action: "cleanOrder")}
             }
             .onChange(of: scenePhase) { (phase) in
                 switch phase {
@@ -50,7 +52,8 @@ import SwiftUI
             .alert(isPresented: self.$viewModel.isMessage) {
                 Alert(title: Text("AEX"),
                       message: Text(self.viewModel.message ?? ""),
-                      dismissButton: .default(Text("OK")))}
+                      dismissButton: .default(Text("OK")))
+            }
             .sheet(isPresented: $showGraphView) {
                 IntraGraphView(showGraphView: self.$showGraphView)}
         }
