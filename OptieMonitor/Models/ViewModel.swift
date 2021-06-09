@@ -114,12 +114,12 @@ class ViewModel: ObservableObject {
                 callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue)-1)!,
                 putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue)-1)!,
                 orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1)-1)!,
-                index: ""
+                index: String(openLine.indexValue)
             ))
         }
         return footer
     }
-    func formatTableView(lines: [QuoteLine]) -> [TableLine]{
+    func formatListView(lines: [QuoteLine]) -> [TableLine]{
         var temp: Double
         var tempInt: Int
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
@@ -164,7 +164,7 @@ class ViewModel: ObservableObject {
         }
         return deltaColor
     }
-
+// =========================
     func generateData(action: String) -> Void {
         dataStale = true
         isMessage = false
@@ -187,13 +187,13 @@ class ViewModel: ObservableObject {
         }
     }
     func unpackJSON(result: RestData) -> Void {
-        self.interLines = self.formatTableView(lines: result.interday)
-        self.interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!, sender: "inter")
-        self.interGraph = self.formatInterGraph(lines: result.interday)
-
-        self.intraLines = self.formatTableView(lines: result.intraday)
+        self.intraLines = self.formatListView(lines: result.intraday)
         self.intraFooter = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
         self.intraGraph = self.formatIntraGraph(lines: result.intraday)
+
+        self.interLines = self.formatListView(lines: result.interday)
+        self.interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
+        self.interGraph = self.formatInterGraph(lines: result.interday)
 
         self.caption = result.caption
         self.datetimeText = self.formatDate(dateIn: result.datetime)
@@ -202,7 +202,7 @@ class ViewModel: ObservableObject {
     }
 }
 
-//=================================
+// =================================
 class JSONclass{
     func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
         let url = URL(string: dataURL + action)!
