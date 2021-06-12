@@ -15,7 +15,7 @@ struct InterdayView: View {
         NavigationView {
             List{
                 Section(header: HeaderView(),
-                        footer: FooterView(footerLines: self.viewModel.interFooter))
+                        footer: FooterView(footerLines: interFooter))
                 {
                     ForEach(self.viewModel.interLines, id:\.id) {quote in
                         RowView(quote: quote)

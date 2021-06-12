@@ -9,8 +9,7 @@ import SwiftUI
 
 class ViewModel: ObservableObject {
     init(){
-        if let data = UserDefaults.standard.data(forKey: "OptieMonitor")// retrieve from UserDefaults
-        {
+        if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
             //print("UserDefaults saved data found")
             do {
                 let decoder = JSONDecoder()
@@ -31,21 +30,12 @@ class ViewModel: ObservableObject {
     {didSet{
         if message != nil {
             isMessage = true
-            print("Incoming message: \(String(describing: message))")
-        } else {
-            isMessage = false
         }
         print("didSet isMessage \(isMessage)")
     }}
     @Published var isMessage: Bool = false
-    @Published var dataStale: Bool = true
     @Published var notificationSet = NotificationSetting()
     {didSet{notificationSetStale = true}}
-
-    var intraFooter: [FooterLine] = []
-    var interFooter: [FooterLine] = []
-    var caption: String = ""
-    var datetimeText: String = ""
 
     func formatDate(dateIn: Date) -> String {
         let formatter = DateFormatter()
@@ -172,7 +162,7 @@ class ViewModel: ObservableObject {
             switch incomingData{
             case .success(let incomingData):
                 self.unpackJSON(result: incomingData)
-                self.dataStale = false
+                dataStale = false
                 notificationSetStale = false
             case .failure(let error):
                 switch error{
@@ -188,15 +178,15 @@ class ViewModel: ObservableObject {
     }
     func unpackJSON(result: RestData) -> Void {
         self.intraLines = self.formatListView(lines: result.intraday)
-        self.intraFooter = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
+        intraFooter = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
         self.intraGraph = self.formatIntraGraph(lines: result.intraday)
 
         self.interLines = self.formatListView(lines: result.interday)
-        self.interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
+        interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
         self.interGraph = self.formatInterGraph(lines: result.interday)
 
-        self.caption = result.caption
-        self.datetimeText = self.formatDate(dateIn: result.datetime)
+        caption = result.caption
+        datetimeText = self.formatDate(dateIn: result.datetime)
         self.message = result.message
         self.notificationSet = result.notificationSettings
     }

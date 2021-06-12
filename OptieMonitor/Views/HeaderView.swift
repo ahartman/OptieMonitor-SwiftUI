@@ -13,11 +13,11 @@ struct HeaderView: View {
 
     var body: some View {
         VStack {
-            Text("\(self.viewModel.caption)")
+            Text("\(caption)")
                 .modifier((StaleModifier()))
                 .padding(.bottom)
             HStack {
-                Text("\(self.viewModel.datetimeText)")
+                Text("\(datetimeText)")
                     .modifier(TextModifier())
                 Text("Call")
                     .modifier(TextModifier())

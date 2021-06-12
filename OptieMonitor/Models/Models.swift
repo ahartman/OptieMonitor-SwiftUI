@@ -7,6 +7,12 @@
 //
 import SwiftUI
 
+
+var intraFooter: [FooterLine] = []
+var interFooter: [FooterLine] = []
+var caption: String = ""
+var datetimeText: String = ""
+var dataStale: Bool = true
 var notificationSetStale: Bool = false
 
 // set data path
@@ -135,8 +141,8 @@ struct StaleModifier: ViewModifier {
     func body(content: Content) -> some View {
         return content
             .frame(minWidth: 0, maxWidth: .infinity)
-            .foregroundColor(viewModel.dataStale ? .red : .secondary)
-            .font(.footnote.weight(viewModel.dataStale ? .bold : .regular))
+            .foregroundColor(dataStale ? .red : .secondary)
+            .font(.footnote.weight(dataStale ? .bold : .regular))
     }
 }
 

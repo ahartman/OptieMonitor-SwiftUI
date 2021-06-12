@@ -18,7 +18,7 @@ struct IntradayView: View {
                     List{
                         Section(
                             header: HeaderView(),
-                            footer: FooterView(footerLines: self.viewModel.intraFooter)
+                            footer: FooterView(footerLines: intraFooter)
                         )
                         {ForEach(self.viewModel.intraLines, id:\.id) {quote in
                             RowView(quote: quote)}}
