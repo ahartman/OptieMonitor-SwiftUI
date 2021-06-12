@@ -14,7 +14,6 @@ struct OptieMonitorApp: App {
     @StateObject var localNotification = LocalNotification()
 
     var viewModel = ViewModel()
-
     var body: some Scene {
         WindowGroup {
             TabView {

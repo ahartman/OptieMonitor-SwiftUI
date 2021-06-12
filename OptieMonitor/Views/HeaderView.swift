@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HeaderView: View {
     @EnvironmentObject var viewModel: ViewModel
-    var geometry: GeometryProxy
+    @Environment(\.verticalSizeClass) var sizeClass
 
     var body: some View {
         VStack {
@@ -21,13 +21,13 @@ struct HeaderView: View {
                     .modifier(TextModifier())
                 Text("Call")
                     .modifier(TextModifier())
-                if(geometry.size.width > geometry.size.height ) {
+                if sizeClass == .compact {
                     Text("∂")
                         .modifier(TextModifier())
                 }
                 Text("Put")
                     .modifier(TextModifier())
-                if(geometry.size.width > geometry.size.height ) {
+                if sizeClass == .compact {
                     Text("∂")
                         .modifier(TextModifier())
                 }

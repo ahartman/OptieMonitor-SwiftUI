@@ -139,3 +139,4 @@ struct StaleModifier: ViewModifier {
             .font(.footnote.weight(viewModel.dataStale ? .bold : .regular))
     }
 }
+

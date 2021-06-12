@@ -13,16 +13,15 @@ struct IntradayView: View {
     @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
-        GeometryReader{ geometry in
             NavigationView {
                 VStack {
                     List{
                         Section(
-                            header: HeaderView(geometry: geometry),
-                            footer: FooterView(footerLines: self.viewModel.intraFooter, geometry: geometry)
+                            header: HeaderView(),
+                            footer: FooterView(footerLines: self.viewModel.intraFooter)
                         )
                         {ForEach(self.viewModel.intraLines, id:\.id) {quote in
-                            RowView(quote: quote, geometry: geometry)}}
+                            RowView(quote: quote)}}
                     }
                     .listStyle(GroupedListStyle())
                     .environment(\.defaultMinListRowHeight, 10)
@@ -56,7 +55,6 @@ struct IntradayView: View {
             }
             .sheet(isPresented: $showGraphView) {
                 IntraGraphView(showGraphView: self.$showGraphView)}
-        }
     }
 }
 

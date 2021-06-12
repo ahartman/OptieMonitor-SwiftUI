@@ -23,7 +23,6 @@ class ViewModel: ObservableObject {
         }
         generateData(action: "currentOrder")
     }
-
     @Published var intraLines: [TableLine] = []
     @Published var interLines: [TableLine] = []
     @Published var intraGraph = [String:Any]()
@@ -92,6 +91,7 @@ class ViewModel: ObservableObject {
     }
 
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
+
         let firstLine = lines.first
         let lastLine = lines.last
         var footer = [FooterLine]()

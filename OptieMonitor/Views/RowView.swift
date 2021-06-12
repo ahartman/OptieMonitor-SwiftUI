@@ -8,24 +8,24 @@
 import SwiftUI
 
 struct RowView: View {
+    @Environment(\.verticalSizeClass) var sizeClass
     var quote: TableLine
-    var geometry: GeometryProxy
-    
+     
     var body: some View {
         HStack {
             Text(self.quote.datetimeText)
                 .modifier(TextModifier())
             Text(self.quote.callPriceText)
                 .modifier(TextModifier())
-            if(geometry.size.width > geometry.size.height ) {
-                Text(self.quote.callDeltaText)
+            if sizeClass == .compact {
+            Text(self.quote.callDeltaText)
                     .modifier(TextModifier())
                     .foregroundColor(Color(self.quote.callDeltaColor))
             }
             Text(self.quote.putPriceText)
                 .modifier(TextModifier())
-            if(geometry.size.width > geometry.size.height ) {
-                Text(self.quote.putDeltaText)
+            if sizeClass == .compact {
+             Text(self.quote.putDeltaText)
                     .modifier(TextModifier())
                     .foregroundColor(Color(self.quote.putDeltaColor))
             }
