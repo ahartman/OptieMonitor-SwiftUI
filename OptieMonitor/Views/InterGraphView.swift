@@ -17,7 +17,7 @@ struct InterGraphView: View {
         NavigationView {
             HStack{
                 ZStack {
-                    Chart(data: self.viewModel.interGraph["columns"] as! [[CGFloat]])
+                    Chart(data: self.viewModel.interday.graph["columns"] as! [[CGFloat]])
                         .chartStyle(
                             StackedColumnChartStyle(colors: [.green, .blue])
                         )
@@ -33,7 +33,7 @@ struct InterGraphView: View {
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .black, lineWidth: 1)
                         )
-                    Chart(data: self.viewModel.interGraph["line"] as! [CGFloat])
+                    Chart(data: self.viewModel.interday.graph["line"] as! [CGFloat])
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .red, lineWidth: 2)
                         )

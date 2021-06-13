@@ -22,10 +22,9 @@ class ViewModel: ObservableObject {
         }
         generateData(action: "currentOrder")
     }
-    @Published var intraLines: [TableLine] = []
-    @Published var interLines: [TableLine] = []
-    @Published var intraGraph = [String:Any]()
-    @Published var interGraph = [String:Any]()
+
+    @Published var intraday = QuotesList()
+    @Published var interday = QuotesList()
     @Published var message: String?
     {didSet{
         if message != nil {
@@ -154,7 +153,7 @@ class ViewModel: ObservableObject {
         }
         return deltaColor
     }
-// =========================
+    // =========================
     func generateData(action: String) -> Void {
         dataStale = true
         isMessage = false
@@ -177,13 +176,13 @@ class ViewModel: ObservableObject {
         }
     }
     func unpackJSON(result: RestData) -> Void {
-        self.intraLines = self.formatListView(lines: result.intraday)
-        intraFooter = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
-        self.intraGraph = self.formatIntraGraph(lines: result.intraday)
+        self.intraday.list = self.formatListView(lines: result.intraday)
+        self.intraday.footer = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
+        self.intraday.graph = self.formatIntraGraph(lines: result.intraday)
 
-        self.interLines = self.formatListView(lines: result.interday)
-        interFooter = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
-        self.interGraph = self.formatInterGraph(lines: result.interday)
+        self.interday.list = self.formatListView(lines: result.intraday)
+        self.interday.footer = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
+        self.interday.graph = self.formatInterGraph(lines: result.interday)
 
         caption = result.caption
         datetimeText = self.formatDate(dateIn: result.datetime)

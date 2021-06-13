@@ -60,6 +60,13 @@ struct NotificationSetting: Codable {
         case sound = "notifySound"
     }
 }
+
+struct QuotesList {
+    var list = [TableLine]()
+    var footer = [FooterLine]()
+    var graph = [String:Any]()
+}
+
 struct TableLine {
     var id: Int = 0
     var datetimeText: String = ""

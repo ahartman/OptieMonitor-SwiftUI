@@ -18,9 +18,9 @@ struct IntradayView: View {
                     List{
                         Section(
                             header: HeaderView(),
-                            footer: FooterView(footerLines: intraFooter)
+                            footer: FooterView(footerLines: viewModel.intraday.footer)
                         )
-                        {ForEach(self.viewModel.intraLines, id:\.id) {quote in
+                        {ForEach(self.viewModel.intraday.list, id:\.id) {quote in
                             RowView(quote: quote)}}
                     }
                     .listStyle(GroupedListStyle())

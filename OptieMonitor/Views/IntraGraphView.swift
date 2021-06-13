@@ -16,11 +16,11 @@ struct IntraGraphView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Chart(data: self.viewModel.intraGraph["call"] as! [CGFloat])
+                Chart(data: self.viewModel.intraday.graph["call"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .green, lineWidth: 2))
-                Chart(data: self.viewModel.intraGraph["put"] as! [CGFloat])
+                Chart(data: self.viewModel.intraday.graph["put"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .blue, lineWidth: 2))
-                Chart(data: self.viewModel.intraGraph["total"] as! [CGFloat])
+                Chart(data: self.viewModel.intraday.graph["total"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .red, lineWidth: 3))
                 Chart(data: [CGFloat(0.5),CGFloat(0.5)])
                     .chartStyle( LineChartStyle(.line, lineColor: .black, lineWidth: 1))
