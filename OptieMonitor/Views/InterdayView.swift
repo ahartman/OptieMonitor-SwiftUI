@@ -17,7 +17,7 @@ struct InterdayView: View {
                 Section(header: HeaderView(),
                         footer: FooterView(footerLines: viewModel.interday.footer))
                 {
-                    ForEach(self.viewModel.interday.list, id:\.id) {quote in
+                    ForEach(viewModel.interday.list, id:\.id) {quote in
                         RowView(quote: quote)
                     }
                 }
@@ -26,13 +26,13 @@ struct InterdayView: View {
             .environment(\.defaultMinListRowHeight, 10)
             .navigationBarTitle("Interday", displayMode: .inline)
             .navigationBarItems(
-                trailing:
-                    Button(action: {self.showGraphView.toggle()})
+                leading:
+                    Button(action: {showGraphView.toggle()})
                         {Image(systemName: "chart.bar")}
             )
         }
         .sheet(isPresented: $showGraphView) {
-            InterGraphView(showGraphView: self.$showGraphView)}
+            InterGraphView(showGraphView: $showGraphView)}
     }
 }
 

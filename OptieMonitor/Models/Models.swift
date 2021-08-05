@@ -66,7 +66,6 @@ struct QuotesList {
     var footer = [FooterLine]()
     var graph = [String:Any]()
 }
-
 struct TableLine {
     var id: Int = 0
     var datetimeText: String = ""
@@ -80,7 +79,6 @@ struct TableLine {
     var orderValueColor: UIColor = UIColor.black
     var indexText: String = ""
 }
-
 struct FooterLine: Hashable {
     let id = UUID()
     var label: String = ""

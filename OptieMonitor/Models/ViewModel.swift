@@ -25,16 +25,19 @@ class ViewModel: ObservableObject {
 
     @Published var intraday = QuotesList()
     @Published var interday = QuotesList()
-    @Published var message: String?
+
+    @Published var isMessage: Bool = false
+    @Published var notificationSet = NotificationSetting()
+    {didSet{
+        notificationSetStale = true
+
+    }}
+    var message: String?
     {didSet{
         if message != nil {
             isMessage = true
         }
-        print("didSet isMessage \(isMessage)")
     }}
-    @Published var isMessage: Bool = false
-    @Published var notificationSet = NotificationSetting()
-    {didSet{notificationSetStale = true}}
 
     func formatDate(dateIn: Date) -> String {
         let formatter = DateFormatter()
@@ -80,7 +83,6 @@ class ViewModel: ObservableObject {
     }
 
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
-
         let firstLine = lines.first
         let lastLine = lines.last
         var footer = [FooterLine]()
@@ -108,7 +110,7 @@ class ViewModel: ObservableObject {
         }
         return footer
     }
-    func formatListView(lines: [QuoteLine]) -> [TableLine]{
+    func formatList(lines: [QuoteLine]) -> [TableLine]{
         var temp: Double
         var tempInt: Int
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
@@ -122,7 +124,7 @@ class ViewModel: ObservableObject {
                 lineFormatted.orderValueText = Formatter.amount0.string(for: temp)!
                 lineFormatted.orderValueColor = .black
                 tempInt = line.indexValue
-                lineFormatted.indexText = Formatter.intDelta.string(for: tempInt)!
+                lineFormatted.indexText = String(tempInt)
             } else {
                 temp = (line.callValue - firstLine.callValue + line.putValue - firstLine.putValue) * line.nrContracts
                 lineFormatted.orderValueText = ((temp == 0) ? "" : Formatter.amount0.string(for: temp))!
@@ -160,7 +162,7 @@ class ViewModel: ObservableObject {
         JSONclass().getJsonData(action: action) { [self] incomingData in
             switch incomingData{
             case .success(let incomingData):
-                self.unpackJSON(result: incomingData)
+                unpackJSON(result: incomingData)
                 dataStale = false
                 notificationSetStale = false
             case .failure(let error):
@@ -176,18 +178,18 @@ class ViewModel: ObservableObject {
         }
     }
     func unpackJSON(result: RestData) -> Void {
-        self.intraday.list = self.formatListView(lines: result.intraday)
-        self.intraday.footer = self.formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
-        self.intraday.graph = self.formatIntraGraph(lines: result.intraday)
+        intraday.list = formatList(lines: result.intraday)
+        intraday.footer = formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
+        intraday.graph = formatIntraGraph(lines: result.intraday)
 
-        self.interday.list = self.formatListView(lines: result.intraday)
-        self.interday.footer = self.formatFooter(lines: result.interday, openLine: result.interday.first!)
-        self.interday.graph = self.formatInterGraph(lines: result.interday)
+        interday.list = formatList(lines: result.interday)
+        interday.footer = formatFooter(lines: result.interday, openLine: result.interday.first!)
+        interday.graph = formatInterGraph(lines: result.interday)
 
         caption = result.caption
-        datetimeText = self.formatDate(dateIn: result.datetime)
-        self.message = result.message
-        self.notificationSet = result.notificationSettings
+        datetimeText = formatDate(dateIn: result.datetime)
+        message = result.message
+        notificationSet = result.notificationSettings
     }
 }
 
@@ -206,7 +208,6 @@ class JSONclass{
                         let decoder = JSONDecoder()
                         decoder.dateDecodingStrategy = .iso8601
                         let incomingData = try decoder.decode(RestData.self, from: incoming)
-
                         completion(.success(incomingData))
                     } catch {
                         print("JSON error:", error)

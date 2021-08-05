@@ -86,7 +86,6 @@ extension NotificationCenter: UNUserNotificationCenterDelegate  {
 
 class LocalNotification: ObservableObject {
     init() {
-
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (allowed, error) in
             //This callback does not trigger on main loop be careful
             print(allowed ? "Notifications allowed" : "Notifications not allowed")
@@ -102,7 +101,6 @@ class LocalNotification: ObservableObject {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: when, repeats: false)
         let request = UNNotificationRequest.init(identifier: "localNotification", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-
     }
 }
 

@@ -16,11 +16,11 @@ struct IntraGraphView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Chart(data: self.viewModel.intraday.graph["call"] as! [CGFloat])
+                Chart(data: viewModel.intraday.graph["call"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .green, lineWidth: 2))
-                Chart(data: self.viewModel.intraday.graph["put"] as! [CGFloat])
+                Chart(data: viewModel.intraday.graph["put"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .blue, lineWidth: 2))
-                Chart(data: self.viewModel.intraday.graph["total"] as! [CGFloat])
+                Chart(data: viewModel.intraday.graph["total"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .red, lineWidth: 3))
                 Chart(data: [CGFloat(0.5),CGFloat(0.5)])
                     .chartStyle( LineChartStyle(.line, lineColor: .black, lineWidth: 1))
@@ -36,8 +36,8 @@ struct IntraGraphView: View {
             .cornerRadius(16)
             .padding()
             .navigationBarTitle("Grafiek", displayMode: .inline)
-            .navigationBarItems(trailing:
-                                    Button(action: {self.showGraphView = false})
+            .navigationBarItems(leading:
+                                    Button(action: {showGraphView = false})
                                         {Image(systemName: "table")})
         }    }
 }

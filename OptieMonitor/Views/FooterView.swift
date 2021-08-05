@@ -4,11 +4,7 @@
 //
 //  Created by André Hartman on 04/06/2021.
 //
-
-
 import SwiftUI
-
- // footerLine is passed as argument as it can be intraFooter or interfooter
 
 struct FooterView: View {
     // footerLine is passed as argument as it can be intraFooter or interfooter
@@ -32,17 +28,17 @@ struct FooterRowView: View {
 
     var body: some View {
         HStack {
-            Text(self.footerLine.label).modifier(TextModifier())
-            Text("\(self.footerLine.callPercent)").modifier(TextModifier())
+            Text(footerLine.label).modifier(TextModifier())
+            Text("\(footerLine.callPercent)").modifier(TextModifier())
             if sizeClass == .compact {
                 Text("").modifier(TextModifier())
             }
-            Text("\(self.footerLine.putPercent)").modifier(TextModifier())
+            Text("\(footerLine.putPercent)").modifier(TextModifier())
             if sizeClass == .compact {
                 Text("").modifier(TextModifier())
             }
-            Text("\(self.footerLine.orderPercent)").modifier(TextModifier())
-            Text("\(self.footerLine.index)").modifier(TextModifier())
+            Text("\(footerLine.orderPercent)").modifier(TextModifier())
+            Text("\(footerLine.index)").modifier(TextModifier())
         }
     }
 }

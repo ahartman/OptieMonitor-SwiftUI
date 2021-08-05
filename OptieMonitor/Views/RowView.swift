@@ -13,27 +13,27 @@ struct RowView: View {
      
     var body: some View {
         HStack {
-            Text(self.quote.datetimeText)
+            Text(quote.datetimeText)
                 .modifier(TextModifier())
-            Text(self.quote.callPriceText)
-                .modifier(TextModifier())
-            if sizeClass == .compact {
-            Text(self.quote.callDeltaText)
-                    .modifier(TextModifier())
-                    .foregroundColor(Color(self.quote.callDeltaColor))
-            }
-            Text(self.quote.putPriceText)
+            Text(quote.callPriceText)
                 .modifier(TextModifier())
             if sizeClass == .compact {
-             Text(self.quote.putDeltaText)
+            Text(quote.callDeltaText)
                     .modifier(TextModifier())
-                    .foregroundColor(Color(self.quote.putDeltaColor))
+                    .foregroundColor(Color(quote.callDeltaColor))
             }
-            Text(self.quote.orderValueText)
+            Text(quote.putPriceText)
                 .modifier(TextModifier())
-                .foregroundColor(Color(self.quote.orderValueColor))
+            if sizeClass == .compact {
+             Text(quote.putDeltaText)
+                    .modifier(TextModifier())
+                    .foregroundColor(Color(quote.putDeltaColor))
+            }
+            Text(quote.orderValueText)
+                .modifier(TextModifier())
+                .foregroundColor(Color(quote.orderValueColor))
 
-            Text(self.quote.indexText)
+            Text(quote.indexText)
                 .modifier(TextModifier())
         }
     }

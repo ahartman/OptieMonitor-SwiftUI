@@ -13,48 +13,44 @@ struct IntradayView: View {
     @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
-            NavigationView {
-                VStack {
-                    List{
-                        Section(
-                            header: HeaderView(),
-                            footer: FooterView(footerLines: viewModel.intraday.footer)
-                        )
-                        {ForEach(self.viewModel.intraday.list, id:\.id) {quote in
-                            RowView(quote: quote)}}
-                    }
-                    .listStyle(GroupedListStyle())
-                    .environment(\.defaultMinListRowHeight, 10)
-                    .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
-                    .navigationBarItems(
-                        trailing:
-                            Button(action: {self.showGraphView.toggle()})
-                                {Image(systemName: "chart.bar")}
+        NavigationView {
+            VStack {
+                List{
+                    Section(
+                        header: HeaderView(),
+                        footer: FooterView(footerLines: viewModel.intraday.footer)
                     )
-                    .onTapGesture(count: 1)
-                        {viewModel.generateData(action: "currentOrder")}
-                    .onLongPressGesture(minimumDuration: 1)
-                        {viewModel.generateData(action: "cleanOrder")}
+                    {ForEach(viewModel.intraday.list, id:\.id) {quote in
+                        RowView(quote: quote)}}
                 }
+                .listStyle(GroupedListStyle())
+                .environment(\.defaultMinListRowHeight, 10)
+                .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
+                .navigationBarItems(
+                    leading:
+                        Button(action: {showGraphView.toggle()})
+                            {Image(systemName: "chart.bar")}
+                )
+                .onTapGesture(count: 1)
+                    {viewModel.generateData(action: "currentOrder")}
+                .onLongPressGesture(minimumDuration: 1)
+                    {viewModel.generateData(action: "cleanOrder")}
             }
-            .onChange(of: scenePhase) { (phase) in
-                switch phase {
-                case .active:
-                    viewModel.generateData(action: "currentOrder")
-                case .background:
-                    _ = 0
-                case .inactive:
-                    _ = 0
-                @unknown default: print("ScenePhase: unexpected state")
-                }
+        }
+        .onChange(of: scenePhase) { (phase) in
+            if phase == .active {
+                viewModel.generateData(action: "currentOrder")
+            } else {
+                print("ScenePhase: unexpected state")
             }
-            .alert(isPresented: self.$viewModel.isMessage) {
-                Alert(title: Text("AEX"),
-                      message: Text(self.viewModel.message ?? ""),
-                      dismissButton: .default(Text("OK")))
-            }
-            .sheet(isPresented: $showGraphView) {
-                IntraGraphView(showGraphView: self.$showGraphView)}
+        }
+        .alert(isPresented: self.$viewModel.isMessage) {
+            Alert(title: Text("AEX"),
+                  message: Text(viewModel.message ?? ""),
+                  dismissButton: .default(Text("OK")))
+        }
+        .sheet(isPresented: $showGraphView) {
+            IntraGraphView(showGraphView: $showGraphView)}
     }
 }
 
