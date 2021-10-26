@@ -25,7 +25,6 @@ class ViewModel: ObservableObject {
 
     @Published var intraday = QuotesList()
     @Published var interday = QuotesList()
-
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
     {didSet{
@@ -81,7 +80,6 @@ class ViewModel: ObservableObject {
         let totals = lineTotals.compactMap({CGFloat($0 * maxOfValues + 0.5)})
         return (["call": calls, "put": puts, "total": totals])
     }
-
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
         let firstLine = lines.first
         let lastLine = lines.last
@@ -112,7 +110,6 @@ class ViewModel: ObservableObject {
     }
     func formatList(lines: [QuoteLine]) -> [TableLine]{
         var temp: Double
-        var tempInt: Int
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
         var linesFormatted = [TableLine]()
 
@@ -123,14 +120,13 @@ class ViewModel: ObservableObject {
                 temp = (line.callValue + line.putValue) * line.nrContracts
                 lineFormatted.orderValueText = Formatter.amount0.string(for: temp)!
                 lineFormatted.orderValueColor = .black
-                tempInt = line.indexValue
-                lineFormatted.indexText = String(tempInt)
+                lineFormatted.indexText = String(line.indexValue)
             } else {
                 temp = (line.callValue - firstLine.callValue + line.putValue - firstLine.putValue) * line.nrContracts
                 lineFormatted.orderValueText = ((temp == 0) ? "" : Formatter.amount0.string(for: temp))!
                 lineFormatted.orderValueColor = setColor(delta: temp)
-                tempInt = line.indexValue - firstLine.indexValue
-                lineFormatted.indexText = (tempInt == 0) ? "" : Formatter.intDelta.string(for: tempInt)!
+                let tempInt = line.indexValue - firstLine.indexValue
+                lineFormatted.indexText = (tempInt == 0) ? "" : Formatter.intDelta.string(for: line.indexValue - firstLine.indexValue)!
             }
             lineFormatted.id = line.id
             lineFormatted.datetimeText = line.datetimeQuote
@@ -220,7 +216,6 @@ class JSONclass{
             }
         }.resume()
     }
-
     func postJSONData<T: Codable>(_ value: T, action: String) {
         let url = URL(string: dataURL + action)!
         var request = URLRequest(url: url)
