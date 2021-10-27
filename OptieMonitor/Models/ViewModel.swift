@@ -112,7 +112,6 @@ class ViewModel: ObservableObject {
     }
     func formatList(lines: [QuoteLine]) -> [TableLine]{
         var temp: Double
-        var tempInt: Int
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
         var linesFormatted = [TableLine]()
 
@@ -123,14 +122,13 @@ class ViewModel: ObservableObject {
                 temp = (line.callValue + line.putValue) * line.nrContracts
                 lineFormatted.orderValueText = Formatter.amount0.string(for: temp)!
                 lineFormatted.orderValueColor = .black
-                tempInt = line.indexValue
-                lineFormatted.indexText = String(tempInt)
+                lineFormatted.indexText = String(line.indexValue)
             } else {
                 temp = (line.callValue - firstLine.callValue + line.putValue - firstLine.putValue) * line.nrContracts
                 lineFormatted.orderValueText = ((temp == 0) ? "" : Formatter.amount0.string(for: temp))!
                 lineFormatted.orderValueColor = setColor(delta: temp)
-                tempInt = line.indexValue - firstLine.indexValue
-                lineFormatted.indexText = (tempInt == 0) ? "" : Formatter.intDelta.string(for: tempInt)!
+                let tempInt = line.indexValue - firstLine.indexValue
+                lineFormatted.indexText = (tempInt == 0) ? "" : Formatter.intDelta.string(for: line.indexValue - firstLine.indexValue)!
             }
             lineFormatted.id = line.id
             lineFormatted.datetimeText = line.datetimeQuote
@@ -178,13 +176,13 @@ class ViewModel: ObservableObject {
         }
     }
     func unpackJSON(result: RestData) -> Void {
-        intraday.list = formatList(lines: result.intraday)
-        intraday.footer = formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
-        intraday.graph = formatIntraGraph(lines: result.intraday)
+        intraday.list = formatList(lines: result.intradays)
+        intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
+        intraday.graph = formatIntraGraph(lines: result.intradays)
 
-        interday.list = formatList(lines: result.interday)
-        interday.footer = formatFooter(lines: result.interday, openLine: result.interday.first!)
-        interday.graph = formatInterGraph(lines: result.interday)
+        interday.list = formatList(lines: result.interdays)
+        interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
+        interday.graph = formatInterGraph(lines: result.interdays)
 
         caption = result.caption
         datetimeText = formatDate(dateIn: result.datetime)
@@ -220,6 +218,23 @@ class JSONclass{
             }
         }.resume()
     }
+/*
+    func getJsonData(action: String) async -> RestData?  {
+        let url = URL(string: dataURL + action)!
+        print("JsonData from: \(url)")
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            UserDefaults.standard.set(data, forKey: "OptieMonitor") // persist in UserDefaults
+            let incomingData = try decoder.decode(RestData.self, from: data)
+            return incomingData
+        } catch {
+            print("Failed to fetch")
+            return nil
+        }
+    }
+ */
 
     func postJSONData<T: Codable>(_ value: T, action: String) {
         let url = URL(string: dataURL + action)!
