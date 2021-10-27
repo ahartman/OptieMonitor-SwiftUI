@@ -27,9 +27,15 @@ struct RestData: Decodable {
     let message: String?
     let datetime: Date
     let notificationSettings: NotificationSetting
-    let intraday: [QuoteLine]
-    let interday: [QuoteLine]
+    let intradays: [QuoteLine]
+    let interdays: [QuoteLine]
     let caption: String
+
+    enum CodingKeys: String, CodingKey {
+        case message, datetime, notificationSettings, caption
+        case intradays = "intraday"
+        case interdays = "interday"
+    }
 }
 
 struct QuoteLine: Decodable {
