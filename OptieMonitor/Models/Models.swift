@@ -27,8 +27,8 @@ struct RestData: Decodable {
     let message: String?
     let datetime: Date
     let notificationSettings: NotificationSetting
-    let intradays: [QuoteLine]
-    let interdays: [QuoteLine]
+    let intraday: [QuoteLine]
+    let interday: [QuoteLine]
     let caption: String
 }
 

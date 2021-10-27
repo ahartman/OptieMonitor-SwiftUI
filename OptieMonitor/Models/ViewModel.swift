@@ -25,7 +25,6 @@ class ViewModel: ObservableObject {
 
     @Published var intraday = QuotesList()
     @Published var interday = QuotesList()
-
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
     {didSet{
@@ -81,7 +80,6 @@ class ViewModel: ObservableObject {
         let totals = lineTotals.compactMap({CGFloat($0 * maxOfValues + 0.5)})
         return (["call": calls, "put": puts, "total": totals])
     }
-
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
         let firstLine = lines.first
         let lastLine = lines.last
