@@ -174,13 +174,13 @@ class ViewModel: ObservableObject {
         }
     }
     func unpackJSON(result: RestData) -> Void {
-        intraday.list = formatList(lines: result.intradays)
-        intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        intraday.graph = formatIntraGraph(lines: result.intradays)
+        intraday.list = formatList(lines: result.intraday)
+        intraday.footer = formatFooter(lines: result.intraday, openLine: result.interday.first!, sender: "intra")
+        intraday.graph = formatIntraGraph(lines: result.intraday)
 
-        interday.list = formatList(lines: result.interdays)
-        interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        interday.graph = formatInterGraph(lines: result.interdays)
+        interday.list = formatList(lines: result.interday)
+        interday.footer = formatFooter(lines: result.interday, openLine: result.interday.first!)
+        interday.graph = formatInterGraph(lines: result.interday)
 
         caption = result.caption
         datetimeText = formatDate(dateIn: result.datetime)
