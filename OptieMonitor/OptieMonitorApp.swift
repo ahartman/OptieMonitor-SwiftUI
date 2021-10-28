@@ -64,7 +64,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         print("enter foreground")
     }
 }
-
 class NotificationCenter: NSObject, ObservableObject {
     var dumbData: UNNotificationResponse?
 
@@ -73,7 +72,6 @@ class NotificationCenter: NSObject, ObservableObject {
         UNUserNotificationCenter.current().delegate = self
     }
 }
-
 extension NotificationCenter: UNUserNotificationCenterDelegate  {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) { }
 
@@ -83,7 +81,6 @@ extension NotificationCenter: UNUserNotificationCenterDelegate  {
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) { }
 }
-
 class LocalNotification: ObservableObject {
     init() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (allowed, error) in

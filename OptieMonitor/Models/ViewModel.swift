@@ -155,23 +155,10 @@ class ViewModel: ObservableObject {
     func generateData(action: String) -> Void {
         dataStale = true
         isMessage = false
-        JSONclass().getJsonData(action: action) { [self] incomingData in
-            switch incomingData{
-            case .success(let incomingData):
-                unpackJSON(result: incomingData)
-                dataStale = false
-                notificationSetStale = false
-            case .failure(let error):
-                switch error{
-                case .badURL:
-                    print("Bad URL")
-                case .requestFailed:
-                    print("Request failed")
-                case .unknown:
-                    print("Unknown error")
-                }
-            }
-        }
+        let incomingData = await JSONclass().getJsonData(action: action)
+        unpackJSON(result: incomingData)
+        dataStale = false
+        notificationSetStale = false
     }
     func unpackJSON(result: RestData) -> Void {
         intraday.list = formatList(lines: result.intradays)
@@ -183,40 +170,14 @@ class ViewModel: ObservableObject {
         interday.graph = formatInterGraph(lines: result.interdays)
 
         caption = result.caption
-        datetimeText = formatDate(dateIn: result.datetime)
         message = result.message
         notificationSet = result.notificationSettings
+        datetimeText = formatDate(dateIn: result.datetime)
     }
 }
 
 // =================================
 class JSONclass{
-    func getJsonData(action: String, completion: @escaping (Result<RestData, NetworkError>) -> Void) {
-        let url = URL(string: dataURL + action)!
-        print("JsonData from: \(url)")
-
-        URLSession.shared.dataTask(with: url) {data, response, error in
-            DispatchQueue.main.async{
-                //print("JSON String: \(String(data: data!, encoding: .utf8))")
-                if let incoming = data {
-                    do {
-                        UserDefaults.standard.set(incoming, forKey: "OptieMonitor") // persist in UserDefaults
-                        let decoder = JSONDecoder()
-                        decoder.dateDecodingStrategy = .iso8601
-                        let incomingData = try decoder.decode(RestData.self, from: incoming)
-                        completion(.success(incomingData))
-                    } catch {
-                        print("JSON error:", error)
-                    }
-                } else if error != nil {
-                    completion(.failure(.requestFailed))
-                } else {
-                    completion(.failure(.unknown))
-                }
-            }
-        }.resume()
-    }
-/*
     func getJsonData(action: String) async -> RestData?  {
         let url = URL(string: dataURL + action)!
         print("JsonData from: \(url)")
@@ -232,41 +193,14 @@ class JSONclass{
             return nil
         }
     }
- */
 
-    func postJSONData<T: Codable>(_ value: T, action: String) {
+    func postJSONData1<T: Codable>(_ value: T, action: String) async {
         let url = URL(string: dataURL + action)!
+        var session = URLSession.shared
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        var jsonData = Data()
-        do {
-            jsonData = try JSONEncoder().encode(value)
-        }
-        catch {
-            print("Encoding problem")
-        }
-
-        let task = URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
-            if let error = error {
-                print ("Error: \(error)")
-            }
-            guard let response = response as? HTTPURLResponse,
-                  (200...299).contains(response.statusCode) else {
-                print ("Server error")
-                return
-            }
-            if let mimeType = response.mimeType,
-               mimeType == "application/json",
-               let data = data,
-               let dataString = String(data: data, encoding: .utf8) {
-                print ("Response to POST: \(dataString)")
-            }
-        }
-        task.resume()
+        jsonData = JSONEncoder().encode(value)
+        let (data, response) = try await session.upload(for: request, from: jsonData)
     }
-}
-enum NetworkError:Error {
-    case badURL, requestFailed, unknown
 }
