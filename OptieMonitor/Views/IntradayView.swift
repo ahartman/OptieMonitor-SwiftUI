@@ -29,16 +29,14 @@ struct IntradayView: View {
                 .navigationBarItems(
                     leading:
                         Button(action: {showGraphView.toggle()})
-                    {Image(systemName: "chart.bar")}
+                    {Image(systemName: "chart.bar")},
+                    trailing:
+                        Button(action: {Task {
+                            await viewModel.getJsonData(action: "cleanOrder")}})
+                    {Image(systemName: "arrow.clockwise")}
                 )
                 .refreshable {
                     await viewModel.getJsonData(action: "currentOrder")
-                }
-                .onLongPressGesture(minimumDuration: 1)
-                {
-                    Task {
-                        await viewModel.getJsonData(action: "cleanOrder")
-                    }
                 }
             }
         }
