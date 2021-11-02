@@ -32,8 +32,10 @@ struct SettingsView: View {
         }
         .onDisappear{
             if(notificationSetStale){
-                JSONclass().postJSONData(viewModel.notificationSet, action: "notificationSettings")
-                notificationSetStale = false
+                Task {
+                    await ViewModel().postJSONData(viewModel.notificationSet, action: "notificationSettings")
+                    notificationSetStale = false
+                }
             }}
     }
 }

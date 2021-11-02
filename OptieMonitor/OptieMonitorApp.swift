@@ -55,7 +55,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
         print("Registering deviceTokenString: \(deviceTokenString)")
         let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
-        JSONclass().postJSONData(jsonObject, action: "apns")
+        Task {
+            await ViewModel().postJSONData(jsonObject, action: "apns")
+        }
     }
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for notifications: \(error.localizedDescription)")

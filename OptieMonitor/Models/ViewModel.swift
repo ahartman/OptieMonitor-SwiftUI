@@ -7,8 +7,9 @@
 //
 import SwiftUI
 
+@MainActor
 class ViewModel: ObservableObject {
-    init(){
+    init() {
         if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
             //print("UserDefaults saved data found")
             do {
@@ -20,7 +21,9 @@ class ViewModel: ObservableObject {
                 print("JSON error from UserDefaults:", error)
             }
         }
-        generateData(action: "currentOrder")
+        Task {
+            await getJsonData(action: "currentOrder")
+        }
     }
 
     @Published var intraday = QuotesList()
@@ -152,14 +155,6 @@ class ViewModel: ObservableObject {
         return deltaColor
     }
     // =========================
-    func generateData(action: String) -> Void {
-        dataStale = true
-        isMessage = false
-        let incomingData = await JSONclass().getJsonData(action: action)
-        unpackJSON(result: incomingData)
-        dataStale = false
-        notificationSetStale = false
-    }
     func unpackJSON(result: RestData) -> Void {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
@@ -174,11 +169,10 @@ class ViewModel: ObservableObject {
         notificationSet = result.notificationSettings
         datetimeText = formatDate(dateIn: result.datetime)
     }
-}
 
-// =================================
-class JSONclass{
-    func getJsonData(action: String) async -> RestData?  {
+    func getJsonData(action: String) async -> Void  {
+        dataStale = true
+        isMessage = false
         let url = URL(string: dataURL + action)!
         print("JsonData from: \(url)")
         let decoder = JSONDecoder()
@@ -187,20 +181,31 @@ class JSONclass{
             let (data, _) = try await URLSession.shared.data(from: url)
             UserDefaults.standard.set(data, forKey: "OptieMonitor") // persist in UserDefaults
             let incomingData = try decoder.decode(RestData.self, from: data)
-            return incomingData
+            unpackJSON(result: incomingData)
+            dataStale = false
+            notificationSetStale = false
         } catch {
             print("Failed to fetch")
-            return nil
         }
     }
 
-    func postJSONData1<T: Codable>(_ value: T, action: String) async {
+    func postJSONData<T: Codable>(_ value: T, action: String) async -> Void {
         let url = URL(string: dataURL + action)!
-        var session = URLSession.shared
+        let session = URLSession.shared
+        let encoder = JSONEncoder()
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        jsonData = JSONEncoder().encode(value)
-        let (data, response) = try await session.upload(for: request, from: jsonData)
+        var jsonData = Data()
+        do {
+            jsonData = try encoder.encode(value)
+        } catch {
+            print("Encoding problem")
+        }
+        do {
+            let (_, _) = try await session.upload(for: request, from: jsonData)
+        } catch {
+            print("Posting problem")
+        }
     }
 }

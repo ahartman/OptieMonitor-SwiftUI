@@ -29,17 +29,24 @@ struct IntradayView: View {
                 .navigationBarItems(
                     leading:
                         Button(action: {showGraphView.toggle()})
-                            {Image(systemName: "chart.bar")}
+                    {Image(systemName: "chart.bar")}
                 )
-                .onTapGesture(count: 1)
-                    {viewModel.generateData(action: "currentOrder")}
+                .refreshable {
+                    await viewModel.getJsonData(action: "currentOrder")
+                }
                 .onLongPressGesture(minimumDuration: 1)
-                    {viewModel.generateData(action: "cleanOrder")}
+                {
+                    Task {
+                        await viewModel.getJsonData(action: "cleanOrder")
+                    }
+                }
             }
         }
         .onChange(of: scenePhase) { (phase) in
             if phase == .active {
-                viewModel.generateData(action: "currentOrder")
+                Task {
+                    await viewModel.getJsonData(action: "currentOrder")
+                }
             } else {
                 print("ScenePhase: unexpected state")
             }
@@ -58,6 +65,8 @@ struct IntradayView: View {
 struct IntradayView_Previews: PreviewProvider {
     static let viewModel = ViewModel()
     static var previews: some View {
-        IntradayView().environmentObject(viewModel)
+        Group {
+            IntradayView().environmentObject(viewModel).previewInterfaceOrientation(.landscapeRight)
+        }
     }
 }
