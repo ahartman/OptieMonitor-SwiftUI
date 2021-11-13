@@ -14,7 +14,7 @@ struct HeaderView: View {
     var body: some View {
         VStack {
             Text("\(caption)")
-                .modifier((StaleModifier()))
+                .modifier(StaleModifier())
                 .padding(.bottom)
             HStack {
                 Text("\(datetimeText)")
@@ -39,6 +39,7 @@ struct HeaderView: View {
         }
     }
 }
+
 /*
  struct HeaderView_Previews: PreviewProvider {
  static let viewModel = ViewModel()

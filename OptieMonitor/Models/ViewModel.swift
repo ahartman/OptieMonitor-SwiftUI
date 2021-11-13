@@ -11,7 +11,7 @@ import SwiftUI
 class ViewModel: ObservableObject {
     init() {
         if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
-            //print("UserDefaults saved data found")
+            // print("UserDefaults saved data found")
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601
@@ -30,12 +30,12 @@ class ViewModel: ObservableObject {
     @Published var interday = QuotesList()
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
-    {didSet{
+    { didSet {
         notificationSetStale = true
 
     }}
     var message: String?
-    {didSet{
+    { didSet {
         if message != nil {
             isMessage = true
         }
@@ -44,32 +44,34 @@ class ViewModel: ObservableObject {
     func formatDate(dateIn: Date) -> String {
         let formatter = DateFormatter()
         let dateMidnight = Calendar.current.date(bySettingHour: 0, minute: 0, second: 0, of: Date())
-        formatter.dateFormat = (dateIn < dateMidnight!) ? "dd-MM" :  "HH:mm"
+        formatter.dateFormat = (dateIn < dateMidnight!) ? "dd-MM" : "HH:mm"
         return formatter.string(for: dateIn)!
     }
+
     func formatInterGraph(lines: [QuoteLine]) -> [String: Any] {
         var columns: [[CGFloat]] = []
 
         let verticalScalar = 1.0
-        let maxValue = lines.compactMap({($0.callValue + $0.putValue) * $0.nrContracts}).max()!/(2 * verticalScalar)
+        let maxValue = lines.compactMap { ($0.callValue + $0.putValue) * $0.nrContracts }.max()!/(2 * verticalScalar)
         for line in lines.reversed() {
-            let callValue = CGFloat(line.callValue*line.nrContracts/maxValue)
-            let putValue = CGFloat(line.putValue*line.nrContracts/maxValue)
-            columns.append([callValue,putValue])
+            let callValue = CGFloat(line.callValue * line.nrContracts/maxValue)
+            let putValue = CGFloat(line.putValue * line.nrContracts/maxValue)
+            columns.append([callValue, putValue])
         }
 
-        let lineIndex = lines.compactMap({Double($0.indexValue) - Double(lines[0].indexValue)})
-        let rangeOfIndex = 0.5 / max(abs(lineIndex.max()!),abs(lineIndex.min()!))
-        let index = lineIndex.compactMap({CGFloat($0 * rangeOfIndex + 0.5)})
+        let lineIndex = lines.compactMap { Double($0.indexValue) - Double(lines[0].indexValue) }
+        let rangeOfIndex = 0.5/max(abs(lineIndex.max()!), abs(lineIndex.min()!))
+        let index = lineIndex.compactMap { CGFloat($0 * rangeOfIndex + 0.5) }
 
         return (["columns": columns, "line": index])
     }
-    func formatIntraGraph(lines: [QuoteLine]) -> [String:Any] {
-        let lineCalls = lines.compactMap({$0.callValue - lines[0].callValue})
-        let linePuts = lines.compactMap({$0.putValue - lines[0].putValue})
-        let lineTotals = lines.compactMap({$0.callValue + $0.putValue - lines[0].callValue - lines[0].putValue})
 
-        let maxOfValues = 0.5 / max(
+    func formatIntraGraph(lines: [QuoteLine]) -> [String: Any] {
+        let lineCalls = lines.compactMap { $0.callValue - lines[0].callValue }
+        let linePuts = lines.compactMap { $0.putValue - lines[0].putValue }
+        let lineTotals = lines.compactMap { $0.callValue + $0.putValue - lines[0].callValue - lines[0].putValue }
+
+        let maxOfValues = 0.5/max(
             abs(lineCalls.max()!),
             abs(linePuts.max()!),
             abs(lineTotals.max()!),
@@ -78,11 +80,12 @@ class ViewModel: ObservableObject {
             abs(lineTotals.min()!)
         )
 
-        let calls = lineCalls.compactMap({CGFloat($0 * maxOfValues + 0.5)})
-        let puts = linePuts.compactMap({CGFloat($0 * maxOfValues + 0.5)})
-        let totals = lineTotals.compactMap({CGFloat($0 * maxOfValues + 0.5)})
+        let calls = lineCalls.compactMap { CGFloat($0 * maxOfValues + 0.5) }
+        let puts = linePuts.compactMap { CGFloat($0 * maxOfValues + 0.5) }
+        let totals = lineTotals.compactMap { CGFloat($0 * maxOfValues + 0.5) }
         return (["call": calls, "put": puts, "total": totals])
     }
+
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
         let firstLine = lines.first
         let lastLine = lines.last
@@ -91,10 +94,10 @@ class ViewModel: ObservableObject {
         let tempLast = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
         let tempFirst = (firstLine!.callValue + firstLine!.putValue) * firstLine!.nrContracts
         footer.append(FooterLine(
-            label: sender == "intra" ? "Nu": "",
-            callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue)-1)!,
-            putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue)-1)!,
-            orderPercent: Formatter.percentage.string(for: (tempLast/tempFirst)-1)!,
+            label: sender == "intra" ? "Nu" : "",
+            callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue) - 1)!,
+            putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue) - 1)!,
+            orderPercent: Formatter.percentage.string(for: (tempLast/tempFirst) - 1)!,
             index: String(lastLine!.indexValue)
         ))
 
@@ -103,22 +106,23 @@ class ViewModel: ObservableObject {
             let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
             footer.append(FooterLine(
                 label: sender == "intra" ? "Order" : "",
-                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue)-1)!,
-                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue)-1)!,
-                orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1)-1)!,
+                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue) - 1)!,
+                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue) - 1)!,
+                orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1) - 1)!,
                 index: String(openLine.indexValue)
             ))
         }
         return footer
     }
-    func formatList(lines: [QuoteLine]) -> [TableLine]{
+
+    func formatList(lines: [QuoteLine]) -> [TableLine] {
         var temp: Double
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
         var linesFormatted = [TableLine]()
 
         for (index, line) in lines.enumerated() {
             var lineFormatted = TableLine()
-            if(index == 0){
+            if index == 0 {
                 firstLine = line
                 temp = (line.callValue + line.putValue) * line.nrContracts
                 lineFormatted.orderValueText = Formatter.amount0.string(for: temp)!
@@ -145,17 +149,19 @@ class ViewModel: ObservableObject {
         }
         return linesFormatted
     }
-    func setColor(delta: Double) -> UIColor{
+
+    func setColor(delta: Double) -> UIColor {
         var deltaColor = UIColor.black
-        if(delta > 0){
+        if delta > 0 {
             deltaColor = .red
-        } else if(delta < 0){
+        } else if delta < 0 {
             deltaColor = .omGreen
         }
         return deltaColor
     }
+
     // =========================
-    func unpackJSON(result: RestData) -> Void {
+    func unpackJSON(result: RestData) {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
         intraday.graph = formatIntraGraph(lines: result.intradays)
@@ -170,7 +176,7 @@ class ViewModel: ObservableObject {
         datetimeText = formatDate(dateIn: result.datetime)
     }
 
-    func getJsonData(action: String) async -> Void  {
+    func getJsonData(action: String) async {
         dataStale = true
         isMessage = false
         let url = URL(string: dataURL + action)!
@@ -203,7 +209,7 @@ class ViewModel: ObservableObject {
             print("Encoding problem")
         }
         do {
-            let (_, _) = try await session.upload(for: request, from: jsonData)
+            _ = try await session.upload(for: request, from: jsonData)
         } catch {
             print("Posting problem")
         }

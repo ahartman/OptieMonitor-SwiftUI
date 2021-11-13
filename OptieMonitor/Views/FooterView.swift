@@ -12,8 +12,8 @@ struct FooterView: View {
 
     var body: some View {
         VStack {
-            ForEach(Array(footerLines.enumerated()), id: \.element) {index, footerLine in
-                if(index == 1) {
+            ForEach(Array(footerLines.enumerated()), id: \.element) { index, footerLine in
+                if index == 1 {
                     Divider()
                 }
                 FooterRowView(footerLine: footerLine)

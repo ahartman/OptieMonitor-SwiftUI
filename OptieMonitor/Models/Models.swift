@@ -7,7 +7,6 @@
 //
 import SwiftUI
 
-
 var intraFooter: [FooterLine] = []
 var interFooter: [FooterLine] = []
 var caption: String = ""
@@ -17,7 +16,7 @@ var notificationSetStale: Bool = false
 
 // set data path
 #if targetEnvironment(simulator)
-//let dataURL = "http://cake.local/orders.json?id=ahartman&action="
+// let dataURL = "http://cake.local/orders.json?id=ahartman&action="
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #else
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
@@ -55,6 +54,7 @@ struct QuoteLine: Decodable {
         case indexValue = "index1"
     }
 }
+
 struct NotificationSetting: Codable {
     var frequency: Int = 0
     var severity: Int = 0
@@ -70,21 +70,23 @@ struct NotificationSetting: Codable {
 struct QuotesList {
     var list = [TableLine]()
     var footer = [FooterLine]()
-    var graph = [String:Any]()
+    var graph = [String: Any]()
 }
+
 struct TableLine {
     var id: Int = 0
     var datetimeText: String = ""
     var callPriceText: String = ""
     var callDeltaText: String = ""
-    var callDeltaColor: UIColor = UIColor.black
+    var callDeltaColor = UIColor.black
     var putPriceText: String = ""
     var putDeltaText: String = ""
-    var putDeltaColor: UIColor = UIColor.black
+    var putDeltaColor = UIColor.black
     var orderValueText: String = ""
-    var orderValueColor: UIColor = UIColor.black
+    var orderValueColor = UIColor.black
     var indexText: String = ""
 }
+
 struct FooterLine: Hashable {
     let id = UUID()
     var label: String = ""
@@ -103,6 +105,7 @@ extension Formatter {
         nf.numberStyle = .currency
         return nf
     }
+
     static var amount0: NumberFormatter {
         let nf = NumberFormatter()
         nf.minimumFractionDigits = 0
@@ -110,6 +113,7 @@ extension Formatter {
         nf.numberStyle = .currency
         return nf
     }
+
     static var delta: NumberFormatter {
         let nf = NumberFormatter()
         nf.minimumFractionDigits = 2
@@ -117,6 +121,7 @@ extension Formatter {
         nf.numberStyle = .decimal
         return nf
     }
+
     static var intDelta: NumberFormatter {
         let nf = NumberFormatter()
         nf.maximumFractionDigits = 0
@@ -124,6 +129,7 @@ extension Formatter {
         nf.numberStyle = .decimal
         return nf
     }
+
     static var percentage: NumberFormatter {
         let nf = NumberFormatter()
         nf.maximumFractionDigits = 0
@@ -135,7 +141,8 @@ extension Formatter {
 
 extension UIColor {
     class var omGreen: UIColor {
-        return UIColor(red: 81/255, green: 199/255, blue: 69/255, alpha: 1.0)   }
+        return UIColor(red: 81/255, green: 199/255, blue: 69/255, alpha: 1.0)
+    }
 }
 
 // Modifiers
@@ -156,4 +163,3 @@ struct StaleModifier: ViewModifier {
             .font(.footnote.weight(dataStale ? .bold : .regular))
     }
 }
-

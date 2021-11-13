@@ -10,7 +10,7 @@ import SwiftUI
 struct RowView: View {
     @Environment(\.verticalSizeClass) var sizeClass
     var quote: TableLine
-     
+
     var body: some View {
         HStack {
             Text(quote.datetimeText)
@@ -18,14 +18,14 @@ struct RowView: View {
             Text(quote.callPriceText)
                 .modifier(TextModifier())
             if sizeClass == .compact {
-            Text(quote.callDeltaText)
+                Text(quote.callDeltaText)
                     .modifier(TextModifier())
                     .foregroundColor(Color(quote.callDeltaColor))
             }
             Text(quote.putPriceText)
                 .modifier(TextModifier())
             if sizeClass == .compact {
-             Text(quote.putDeltaText)
+                Text(quote.putDeltaText)
                     .modifier(TextModifier())
                     .foregroundColor(Color(quote.putDeltaColor))
             }
@@ -38,6 +38,7 @@ struct RowView: View {
         }
     }
 }
+
 /*
  struct InterdayRowView_Previews: PreviewProvider {
  static var previews: some View {

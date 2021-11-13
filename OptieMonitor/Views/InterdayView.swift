@@ -13,11 +13,10 @@ struct InterdayView: View {
 
     var body: some View {
         NavigationView {
-            List{
+            List {
                 Section(header: HeaderView(),
-                        footer: FooterView(footerLines: viewModel.interday.footer))
-                {
-                    ForEach(viewModel.interday.list, id:\.id) {quote in
+                        footer: FooterView(footerLines: viewModel.interday.footer)) {
+                    ForEach(viewModel.interday.list, id: \.id) { quote in
                         RowView(quote: quote)
                     }
                 }
@@ -27,12 +26,13 @@ struct InterdayView: View {
             .navigationBarTitle("Interday", displayMode: .inline)
             .navigationBarItems(
                 leading:
-                    Button(action: {showGraphView.toggle()})
-                        {Image(systemName: "chart.bar")}
+                Button(action: { showGraphView.toggle() })
+                    { Image(systemName: "chart.bar") }
             )
         }
         .sheet(isPresented: $showGraphView) {
-            InterGraphView(showGraphView: $showGraphView)}
+            InterGraphView(showGraphView: $showGraphView)
+        }
     }
 }
 

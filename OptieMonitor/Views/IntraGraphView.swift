@@ -5,14 +5,14 @@
 //  Created by André Hartman on 14/10/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-import SwiftUI
 import Charts
 import Shapes
+import SwiftUI
 
 struct IntraGraphView: View {
     @EnvironmentObject var viewModel: ViewModel
     @Binding var showGraphView: Bool
-    
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -22,8 +22,8 @@ struct IntraGraphView: View {
                     .chartStyle(LineChartStyle(.line, lineColor: .blue, lineWidth: 2))
                 Chart(data: viewModel.intraday.graph["total"] as! [CGFloat])
                     .chartStyle(LineChartStyle(.line, lineColor: .red, lineWidth: 3))
-                Chart(data: [CGFloat(0.5),CGFloat(0.5)])
-                    .chartStyle( LineChartStyle(.line, lineColor: .black, lineWidth: 1))
+                Chart(data: [CGFloat(0.5), CGFloat(0.5)])
+                    .chartStyle(LineChartStyle(.line, lineColor: .black, lineWidth: 1))
                     .background(
                         Color.gray.opacity(0.1)
                             .overlay(
@@ -37,10 +37,12 @@ struct IntraGraphView: View {
             .padding()
             .navigationBarTitle("Grafiek", displayMode: .inline)
             .navigationBarItems(leading:
-                                    Button(action: {showGraphView = false})
-                                        {Image(systemName: "table")})
-        }    }
+                Button(action: { showGraphView = false })
+                    { Image(systemName: "table") })
+        }
+    }
 }
+
 /*
  struct IntraGraphView_Previews: PreviewProvider {
  static var previews: some View {

@@ -5,9 +5,9 @@
 //  Created by André Hartman on 14/10/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-import SwiftUI
 import Charts
 import Shapes
+import SwiftUI
 
 struct InterGraphView: View {
     @EnvironmentObject var viewModel: ViewModel
@@ -15,7 +15,7 @@ struct InterGraphView: View {
 
     var body: some View {
         NavigationView {
-            HStack{
+            HStack {
                 ZStack {
                     Chart(data: viewModel.interday.graph["columns"] as! [[CGFloat]])
                         .chartStyle(
@@ -29,7 +29,7 @@ struct InterGraphView: View {
                                         .stroke(Color.red.opacity(0.2), style: .init(lineWidth: 1, lineCap: .round))
                                 )
                         )
-                    Chart(data: [CGFloat(0.5),CGFloat(0.5)])
+                    Chart(data: [CGFloat(0.5), CGFloat(0.5)])
                         .chartStyle(
                             LineChartStyle(.line, lineColor: .black, lineWidth: 1)
                         )
@@ -43,8 +43,8 @@ struct InterGraphView: View {
             }
             .navigationBarTitle("Grafiek", displayMode: .inline)
             .navigationBarItems(leading:
-                                    Button(action: {showGraphView = false})
-                                        {Image(systemName: "table")})
+                Button(action: { showGraphView = false })
+                    { Image(systemName: "table") })
         }
     }
 }

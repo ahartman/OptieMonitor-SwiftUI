@@ -15,32 +15,34 @@ struct IntradayView: View {
     var body: some View {
         NavigationView {
             VStack {
-                List{
+                List {
                     Section(
                         header: HeaderView(),
                         footer: FooterView(footerLines: viewModel.intraday.footer)
                     )
-                    {ForEach(viewModel.intraday.list, id:\.id) {quote in
-                        RowView(quote: quote)}}
+                        { ForEach(viewModel.intraday.list, id: \.id) { quote in
+                            RowView(quote: quote)
+                        }}
                 }
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 10)
                 .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
                 .navigationBarItems(
                     leading:
-                        Button(action: {showGraphView.toggle()})
-                    {Image(systemName: "chart.bar")},
+                    Button(action: { showGraphView.toggle() })
+                        { Image(systemName: "chart.bar") },
                     trailing:
-                        Button(action: {Task {
-                            await viewModel.getJsonData(action: "cleanOrder")}})
-                    {Image(systemName: "arrow.clockwise")}
+                    Button(action: { Task {
+                        await viewModel.getJsonData(action: "cleanOrder")
+                    }})
+                        { Image(systemName: "arrow.clockwise") }
                 )
                 .refreshable {
                     await viewModel.getJsonData(action: "currentOrder")
                 }
             }
         }
-        .onChange(of: scenePhase) { (phase) in
+        .onChange(of: scenePhase) { phase in
             if phase == .active {
                 Task {
                     await viewModel.getJsonData(action: "currentOrder")
@@ -55,10 +57,10 @@ struct IntradayView: View {
                   dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $showGraphView) {
-            IntraGraphView(showGraphView: $showGraphView)}
+            IntraGraphView(showGraphView: $showGraphView)
+        }
     }
 }
-
 
 struct IntradayView_Previews: PreviewProvider {
     static let viewModel = ViewModel()
