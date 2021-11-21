@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HeaderView: View {
-    @EnvironmentObject var viewModel: ViewModel
+    //@EnvironmentObject var viewModel: ViewModel
     @Environment(\.verticalSizeClass) var sizeClass
 
     var body: some View {

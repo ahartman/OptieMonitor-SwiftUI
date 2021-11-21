@@ -9,6 +9,21 @@ import SwiftUI
 
 @MainActor
 class ViewModel: ObservableObject {
+    @Published var intraday = QuotesList()
+    @Published var interday = QuotesList()
+    @Published var isMessage: Bool = false
+    @Published var notificationSet = NotificationSetting()
+    { didSet {
+        notificationSetStale = true
+
+    }}
+    var message: String?
+    { didSet {
+        if message != nil {
+            isMessage = true
+        }
+    }}
+
     init() {
         if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
             // print("UserDefaults saved data found")
@@ -25,21 +40,6 @@ class ViewModel: ObservableObject {
             await getJsonData(action: "currentOrder")
         }
     }
-
-    @Published var intraday = QuotesList()
-    @Published var interday = QuotesList()
-    @Published var isMessage: Bool = false
-    @Published var notificationSet = NotificationSetting()
-    { didSet {
-        notificationSetStale = true
-
-    }}
-    var message: String?
-    { didSet {
-        if message != nil {
-            isMessage = true
-        }
-    }}
 
     func formatDate(dateIn: Date) -> String {
         let formatter = DateFormatter()
