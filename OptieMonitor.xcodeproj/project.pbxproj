@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -20,6 +20,7 @@
 		E830057325480CB500B2CA56 /* IntradayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056B25480CB500B2CA56 /* IntradayView.swift */; };
 		E830057925480D4100B2CA56 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = E830057825480D4100B2CA56 /* Charts */; };
 		E83005812548138100B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005802548138100B2CA56 /* Assets.xcassets */; };
+		E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = E895DA4C274FB7E40069F3A6 /* SwiftUICharts */; };
 		E8B66D65266A067C00C071CE /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B66D64266A067C00C071CE /* FooterView.swift */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E830057925480D4100B2CA56 /* Charts in Frameworks */,
+				E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,6 +136,7 @@
 			name = OptieMonitor;
 			packageProductDependencies = (
 				E830057825480D4100B2CA56 /* Charts */,
+				E895DA4C274FB7E40069F3A6 /* SwiftUICharts */,
 			);
 			productName = OptieMonitor;
 			productReference = E83005292548066400B2CA56 /* OptieMonitor.app */;
@@ -154,7 +157,7 @@
 				};
 			};
 			buildConfigurationList = E83005242548066400B2CA56 /* Build configuration list for PBXProject "OptieMonitor" */;
-			compatibilityVersion = "Xcode 12.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -164,6 +167,7 @@
 			mainGroup = E83005202548066400B2CA56;
 			packageReferences = (
 				E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */,
+				E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
 			);
 			productRefGroup = E830052A2548066400B2CA56 /* Products */;
 			projectDirPath = "";
@@ -259,7 +263,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -314,7 +318,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -404,6 +408,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/willdale/SwiftUICharts.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -411,6 +423,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */;
 			productName = Charts;
+		};
+		E895DA4C274FB7E40069F3A6 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */;
+			productName = SwiftUICharts;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

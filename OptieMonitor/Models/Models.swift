@@ -6,6 +6,7 @@
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
 import SwiftUI
+import SwiftUICharts
 
 var intraFooter: [FooterLine] = []
 var interFooter: [FooterLine] = []
@@ -70,7 +71,16 @@ struct NotificationSetting: Codable {
 struct QuotesList {
     var list = [TableLine]()
     var footer = [FooterLine]()
-    var graph = [String: Any]()
+    var graphLine = [String: Any]()
+    var interGraph = StackedBarDataSets(dataSets: [StackedBarDataSet]())
+    var extraLine = [ExtraLineDataPoint]()
+}
+
+struct interGraphLine {
+    var label: String
+    var call: Int
+    var put: Int
+    var index: Int
 }
 
 struct TableLine {

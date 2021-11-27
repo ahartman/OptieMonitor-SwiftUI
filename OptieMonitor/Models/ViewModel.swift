@@ -6,6 +6,7 @@
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
 import SwiftUI
+import SwiftUICharts
 
 @MainActor
 class ViewModel: ObservableObject {
@@ -48,22 +49,34 @@ class ViewModel: ObservableObject {
         return formatter.string(for: dateIn)!
     }
 
-    func formatInterGraph(lines: [QuoteLine]) -> [String: Any] {
-        var columns: [[CGFloat]] = []
+    func formatInterGraph(lines: [QuoteLine]) -> (StackedBarDataSets, [ExtraLineDataPoint]) {
+        enum Group {
+            case call
+            case put
 
-        let verticalScalar = 1.0
-        let maxValue = lines.compactMap { ($0.callValue + $0.putValue) * $0.nrContracts }.max()!/(2 * verticalScalar)
-        for line in lines.reversed() {
-            let callValue = CGFloat(line.callValue * line.nrContracts/maxValue)
-            let putValue = CGFloat(line.putValue * line.nrContracts/maxValue)
-            columns.append([callValue, putValue])
+            var data: GroupingData {
+                switch self {
+                case .call:
+                    return GroupingData(title: "Call", colour: ColourStyle(colour: .red))
+                case .put:
+                    return GroupingData(title: "Put", colour: ColourStyle(colour: .blue))
+                }
+            }
         }
 
-        let lineIndex = lines.compactMap { Double($0.indexValue) - Double(lines[0].indexValue) }
-        let rangeOfIndex = 0.5/max(abs(lineIndex.max()!), abs(lineIndex.min()!))
-        let index = lineIndex.compactMap { CGFloat($0 * rangeOfIndex + 0.5) }
+        var dataSets = [StackedBarDataSet]()
+        var extraLineData = [ExtraLineDataPoint]()
+        for line in lines {
+            let dataSet = StackedBarDataSet(dataPoints: [
+                            StackedBarDataPoint(value: line.callValue * line.nrContracts,group: Group.call.data),
+                            StackedBarDataPoint(value: line.putValue * line.nrContracts,group: Group.put.data )],
+                            setTitle: line.datetimeQuote)
+            dataSets.append(dataSet)
+            extraLineData.append(ExtraLineDataPoint(value: Double(line.indexValue)))
+        }
+        let interGraphData = StackedBarDataSets(dataSets: dataSets)
 
-        return (["columns": columns, "line": index])
+        return (interGraphData, extraLineData)
     }
 
     func formatIntraGraph(lines: [QuoteLine]) -> [String: Any] {
@@ -164,11 +177,13 @@ class ViewModel: ObservableObject {
     func unpackJSON(result: RestData) {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        intraday.graph = formatIntraGraph(lines: result.intradays)
+        intraday.graphLine = formatIntraGraph(lines: result.intradays)
 
         interday.list = formatList(lines: result.interdays)
         interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        interday.graph = formatInterGraph(lines: result.interdays)
+        let (temp1, temp2) = formatInterGraph(lines: result.interdays)
+        interday.interGraph = temp1
+        interday.extraLine = temp2
 
         caption = result.caption
         message = result.message
