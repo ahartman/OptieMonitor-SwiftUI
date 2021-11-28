@@ -18,7 +18,6 @@
 		E830057125480CB500B2CA56 /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056925480CB500B2CA56 /* RowView.swift */; };
 		E830057225480CB500B2CA56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056A25480CB500B2CA56 /* SettingsView.swift */; };
 		E830057325480CB500B2CA56 /* IntradayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056B25480CB500B2CA56 /* IntradayView.swift */; };
-		E830057925480D4100B2CA56 /* Charts in Frameworks */ = {isa = PBXBuildFile; productRef = E830057825480D4100B2CA56 /* Charts */; };
 		E83005812548138100B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005802548138100B2CA56 /* Assets.xcassets */; };
 		E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = E895DA4C274FB7E40069F3A6 /* SwiftUICharts */; };
 		E8B66D65266A067C00C071CE /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B66D64266A067C00C071CE /* FooterView.swift */; };
@@ -48,7 +47,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E830057925480D4100B2CA56 /* Charts in Frameworks */,
 				E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -135,7 +133,6 @@
 			);
 			name = OptieMonitor;
 			packageProductDependencies = (
-				E830057825480D4100B2CA56 /* Charts */,
 				E895DA4C274FB7E40069F3A6 /* SwiftUICharts */,
 			);
 			productName = OptieMonitor;
@@ -166,7 +163,6 @@
 			);
 			mainGroup = E83005202548066400B2CA56;
 			packageReferences = (
-				E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */,
 				E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
 			);
 			productRefGroup = E830052A2548066400B2CA56 /* Products */;
@@ -344,7 +340,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -368,7 +364,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.6;
+				MARKETING_VERSION = 3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -400,14 +396,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/swift-extensions/swiftui-charts.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/willdale/SwiftUICharts.git";
@@ -419,11 +407,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E830057825480D4100B2CA56 /* Charts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E830057725480D4100B2CA56 /* XCRemoteSwiftPackageReference "swiftui-charts" */;
-			productName = Charts;
-		};
 		E895DA4C274FB7E40069F3A6 /* SwiftUICharts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */;

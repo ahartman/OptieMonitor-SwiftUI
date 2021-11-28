@@ -5,7 +5,6 @@
 //  Created by André Hartman on 14/10/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
-import Charts
 import SwiftUI
 import SwiftUICharts
 
@@ -29,8 +28,8 @@ struct InterGraphView: View {
                 .yAxisLabels(chartData: data)
                 .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
                 .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
-                .padding(.horizontal,10)
-                //.frame(minWidth: 150, maxWidth: 400, minHeight: 150, idealHeight: 500, maxHeight: 600, alignment: .center)
+                .padding(.horizontal, 10)
+                // .frame(minWidth: 150, maxWidth: 400, minHeight: 150, idealHeight: 500, maxHeight: 600, alignment: .center)
                 .navigationBarTitle("Interday waarde", displayMode: .inline)
                 .navigationBarItems(leading:
                     Button(action: { showGraphView = false })
@@ -43,28 +42,14 @@ struct InterGraphView: View {
                        lineType: .line,
                        lineSpacing: .bar,
                        yAxisTitle: "Index",
-                       yAxisNumberOfLabels: 10,
+                       yAxisNumberOfLabels: 11,
                        animationType: .raise,
                        baseline: .minimumValue)
     }
 
     static func makeData() -> StackedBarChartData {
-        enum Group {
-            case call
-            case put
-
-            var data: GroupingData {
-                switch self {
-                case .call:
-                    return GroupingData(title: "Call", colour: ColourStyle(colour: .red))
-                case .put:
-                    return GroupingData(title: "Put", colour: ColourStyle(colour: .blue))
-                }
-            }
-        }
-
-        let data = ViewModel().interday.interGraph
-        let groups = [Group.call.data, Group.put.data]
+        let data = ViewModel().interday.graphDataS
+        let groups = [GroupData.call.data, GroupData.put.data]
         let gridStyle = GridStyle(numberOfLines: 5,
                                   lineColour: Color.gray.opacity(0.75))
 
@@ -72,10 +57,11 @@ struct InterGraphView: View {
                                    groups: groups,
                                    barStyle: BarStyle(barWidth: 0.5),
                                    chartStyle: BarChartStyle(
+                                       infoBoxPlacement: .header,
                                        xAxisGridStyle: gridStyle,
                                        xAxisLabelsFrom: .dataPoint(rotation: .degrees(-90)),
                                        yAxisGridStyle: gridStyle,
-                                       yAxisNumberOfLabels: 10,
+                                       yAxisNumberOfLabels: 11,
                                        baseline: .zero))
     }
 

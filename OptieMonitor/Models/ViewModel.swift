@@ -49,54 +49,53 @@ class ViewModel: ObservableObject {
         return formatter.string(for: dateIn)!
     }
 
-    func formatInterGraph(lines: [QuoteLine]) -> (StackedBarDataSets, [ExtraLineDataPoint]) {
-        enum Group {
-            case call
-            case put
-
-            var data: GroupingData {
-                switch self {
-                case .call:
-                    return GroupingData(title: "Call", colour: ColourStyle(colour: .red))
-                case .put:
-                    return GroupingData(title: "Put", colour: ColourStyle(colour: .blue))
-                }
-            }
-        }
-
-        var dataSets = [StackedBarDataSet]()
+    func formatInterGraph(lines: [QuoteLine]) -> (StackedBarDataSets, [ExtraLineDataPoint], GroupedBarDataSets) {
+        var stackSets = [StackedBarDataSet]()
+        var groupSets = [GroupedBarDataSet]()
         var extraLineData = [ExtraLineDataPoint]()
+
         for line in lines {
-            let dataSet = StackedBarDataSet(dataPoints: [
-                            StackedBarDataPoint(value: line.callValue * line.nrContracts,group: Group.call.data),
-                            StackedBarDataPoint(value: line.putValue * line.nrContracts,group: Group.put.data )],
-                            setTitle: line.datetimeQuote)
-            dataSets.append(dataSet)
+            stackSets.append(StackedBarDataSet(dataPoints: [
+                StackedBarDataPoint(value: line.callValue * line.nrContracts, group: GroupData.call.data),
+                StackedBarDataPoint(value: line.putValue * line.nrContracts, group: GroupData.put.data),
+            ], setTitle: line.datetimeQuote))
+
+            groupSets.append(GroupedBarDataSet(dataPoints: [
+                GroupedBarDataPoint(value: line.callValue * line.nrContracts, group: GroupData.call.data),
+                GroupedBarDataPoint(value: line.putValue * line.nrContracts, group: GroupData.put.data),
+            ], setTitle: line.datetimeQuote))
+
             extraLineData.append(ExtraLineDataPoint(value: Double(line.indexValue)))
         }
-        let interGraphData = StackedBarDataSets(dataSets: dataSets)
-
-        return (interGraphData, extraLineData)
+        return (StackedBarDataSets(dataSets: stackSets), extraLineData, GroupedBarDataSets(dataSets: groupSets))
     }
 
-    func formatIntraGraph(lines: [QuoteLine]) -> [String: Any] {
-        let lineCalls = lines.compactMap { $0.callValue - lines[0].callValue }
-        let linePuts = lines.compactMap { $0.putValue - lines[0].putValue }
-        let lineTotals = lines.compactMap { $0.callValue + $0.putValue - lines[0].callValue - lines[0].putValue }
+    func formatIntraGraph(lines: [QuoteLine]) -> (MultiLineDataSet, [ExtraLineDataPoint]) {
+        var callLineSet = [LineChartDataPoint]()
+        var putLineSet = [LineChartDataPoint]()
+        var extraLineData = [ExtraLineDataPoint]()
 
-        let maxOfValues = 0.5/max(
-            abs(lineCalls.max()!),
-            abs(linePuts.max()!),
-            abs(lineTotals.max()!),
-            abs(lineCalls.min()!),
-            abs(linePuts.min()!),
-            abs(lineTotals.min()!)
-        )
+        
 
-        let calls = lineCalls.compactMap { CGFloat($0 * maxOfValues + 0.5) }
-        let puts = linePuts.compactMap { CGFloat($0 * maxOfValues + 0.5) }
-        let totals = lineTotals.compactMap { CGFloat($0 * maxOfValues + 0.5) }
-        return (["call": calls, "put": puts, "total": totals])
+        for line in lines {
+            callLineSet.append(LineChartDataPoint(value: line.callValue - lines[0].callValue, xAxisLabel: line.datetimeQuote))
+            putLineSet.append(LineChartDataPoint(value: line.putValue - lines[0].putValue, xAxisLabel: line.datetimeQuote))
+            extraLineData.append(ExtraLineDataPoint(value: Double(line.indexValue)))
+        }
+
+        let lineData = MultiLineDataSet(dataSets: [
+            LineDataSet(dataPoints: callLineSet,
+                                              legendTitle: "Call",
+                                              pointStyle: PointStyle(pointType: .filled, pointShape: .square),
+                                              style: LineStyle(lineColour: ColourStyle(colour: .red), lineType: .curvedLine)),
+            LineDataSet(dataPoints: putLineSet,
+                                              legendTitle: "Put",
+                                              pointStyle: PointStyle(pointType: .filled, pointShape: .square),
+                                              style: LineStyle(lineColour: ColourStyle(colour: .blue), lineType: .curvedLine))
+
+            ])
+        return (lineData, extraLineData)
+
     }
 
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
@@ -177,13 +176,11 @@ class ViewModel: ObservableObject {
     func unpackJSON(result: RestData) {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        intraday.graphLine = formatIntraGraph(lines: result.intradays)
+        (intraday.graphDataL, intraday.extraLine) = formatIntraGraph(lines: result.intradays)
 
         interday.list = formatList(lines: result.interdays)
         interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        let (temp1, temp2) = formatInterGraph(lines: result.interdays)
-        interday.interGraph = temp1
-        interday.extraLine = temp2
+        (interday.graphDataS, interday.extraLine, interday.graphDataG) = formatInterGraph(lines: result.interdays)
 
         caption = result.caption
         message = result.message

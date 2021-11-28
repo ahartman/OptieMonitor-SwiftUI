@@ -72,7 +72,9 @@ struct QuotesList {
     var list = [TableLine]()
     var footer = [FooterLine]()
     var graphLine = [String: Any]()
-    var interGraph = StackedBarDataSets(dataSets: [StackedBarDataSet]())
+    var graphDataS = StackedBarDataSets(dataSets: [StackedBarDataSet]())
+    var graphDataG = GroupedBarDataSets(dataSets: [GroupedBarDataSet]())
+    var graphDataL = MultiLineDataSet(dataSets: [LineDataSet]())
     var extraLine = [ExtraLineDataPoint]()
 }
 
@@ -104,6 +106,20 @@ struct FooterLine: Hashable {
     var putPercent: String = ""
     var orderPercent: String = ""
     var index: String = ""
+}
+
+enum GroupData {
+    case call
+    case put
+
+    var data: GroupingData {
+        switch self {
+        case .call:
+            return GroupingData(title: "Call", colour: ColourStyle(colour: .red))
+        case .put:
+            return GroupingData(title: "Put", colour: ColourStyle(colour: .blue))
+        }
+    }
 }
 
 // Extensions
