@@ -9,11 +9,12 @@ import SwiftUI
 
 @main
 struct OptieMonitorApp: App {
+    var viewModel = ViewModel()
+
     @UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
     @StateObject var notificationCenter = NotificationCenter()
     @StateObject var localNotification = LocalNotification()
 
-    var viewModel = ViewModel()
     var body: some Scene {
         WindowGroup {
             TabView {

@@ -22,7 +22,8 @@ struct IntradayView: View {
                     )
                         { ForEach(viewModel.intraday.list, id: \.id) { quote in
                             RowView(quote: quote)
-                        }}
+                        }
+                        }
                 }
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 10)
@@ -65,8 +66,6 @@ struct IntradayView: View {
 struct IntradayView_Previews: PreviewProvider {
     static let viewModel = ViewModel()
     static var previews: some View {
-        Group {
-            IntradayView().environmentObject(viewModel).previewInterfaceOrientation(.landscapeRight)
-        }
+            IntradayView().environmentObject(viewModel)
     }
 }

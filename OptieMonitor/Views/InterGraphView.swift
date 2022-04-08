@@ -17,23 +17,26 @@ struct InterGraphView: View {
 
     var body: some View {
         NavigationView {
-            StackedBarChart(chartData: data)
-                .extraLine(chartData: data,
-                           legendTitle: "Index",
-                           datapoints: extraLineData,
-                           style: extraLineStyle)
-                .xAxisGrid(chartData: data)
-                .xAxisLabels(chartData: data)
-                .yAxisGrid(chartData: data)
-                .yAxisLabels(chartData: data)
-                .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
-                .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
-                .padding(.horizontal, 10)
-                // .frame(minWidth: 150, maxWidth: 400, minHeight: 150, idealHeight: 500, maxHeight: 600, alignment: .center)
-                .navigationBarTitle("Interday waarde", displayMode: .inline)
-                .navigationBarItems(leading:
-                    Button(action: { showGraphView = false })
-                        { Image(systemName: "table") })
+            GeometryReader { geo in
+                StackedBarChart(chartData: data)
+                    .extraLine(chartData: data,
+                               legendTitle: "Index",
+                               datapoints: extraLineData,
+                               style: extraLineStyle)
+                    .xAxisGrid(chartData: data)
+                    .xAxisLabels(chartData: data)
+                    .yAxisGrid(chartData: data)
+                    .yAxisLabels(chartData: data)
+                    .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
+                    .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
+                    .id(data.id)
+                    .padding(20.0)
+                    .frame(width: geo.size.width * 0.9, height: geo.size.height * 0.9, alignment: .bottom)
+                    .navigationBarTitle("Interday waarde en index", displayMode: .inline)
+                    .navigationBarItems(leading:
+                        Button(action: { showGraphView = false })
+                            { Image(systemName: "table") })
+            }
         }
     }
 

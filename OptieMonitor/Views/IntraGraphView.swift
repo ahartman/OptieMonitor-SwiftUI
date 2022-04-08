@@ -17,26 +17,28 @@ struct IntraGraphView: View {
     static var yLabelsNumber = 10
 
     var body: some View {
-        NavigationView {
-            VStack {
-                MultiLineChart(chartData: data)
-                    .extraLine(chartData: data,
-                               legendTitle: "Index",
-                               datapoints: extraLineData,
-                               style: extraLineStyle)
-                    // .pointMarkers(chartData: data)
-                    .xAxisGrid(chartData: data)
-                    .yAxisGrid(chartData: data)
-                    .xAxisLabels(chartData: data)
-                    .yAxisLabels(chartData: data, specifier: "%.2f")
-                    .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
-                    .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
-                    .id(data.id)
-                    .frame(minWidth: 150, maxWidth: 900, minHeight: 150, idealHeight: 500, maxHeight: 600, alignment: .center)
-                    .navigationBarTitle("Intraday waarde", displayMode: .inline)
-                    .navigationBarItems(leading:
-                        Button(action: { showGraphView = false })
-                            { Image(systemName: "table") })
+     NavigationView {
+         GeometryReader { geo in
+                VStack {
+                    MultiLineChart(chartData: data)
+                        .extraLine(chartData: data,
+                                   legendTitle: "Index",
+                                   datapoints: extraLineData,
+                                   style: extraLineStyle)
+                        .xAxisGrid(chartData: data)
+                        .yAxisGrid(chartData: data)
+                        .xAxisLabels(chartData: data)
+                        .yAxisLabels(chartData: data, specifier: "%.2f")
+                        .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
+                        .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
+                        .id(data.id)
+                        .padding(20.0)
+                        .frame(width: geo.size.width * 0.9, height: geo.size.height * 0.9, alignment: .bottom)
+                        .navigationBarTitle("Intraday waarde en index", displayMode: .inline)
+                        .navigationBarItems(leading:
+                            Button(action: { showGraphView = false })
+                                { Image(systemName: "table") })
+                }
             }
         }
     }
@@ -75,11 +77,9 @@ struct IntraGraphView: View {
 /*
  struct IntraGraphView_Previews: PreviewProvider {
      @EnvironmentObject var viewModel: ViewModel
-     @Binding var showGraphView: Bool
 
      static var previews: some View {
-         IntraGraphView( showGraphView = false )
-             .preferredColorScheme(.dark)
+         IntraGraphView.environmentObject(ViewModel())
      }
  }
  */

@@ -17,9 +17,10 @@ var notificationSetStale: Bool = false
 
 // set data path
 #if targetEnvironment(simulator)
-// let dataURL = "http://cake.local/orders.json?id=ahartman&action="
-let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
+let dataURL = "http://cake.local/orders.json?id=ahartman&action="
+//let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #else
+//let dataURL = "http://cake.local/orders.json?id=ahartman&action="
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #endif
 

@@ -16,7 +16,6 @@ class ViewModel: ObservableObject {
     @Published var notificationSet = NotificationSetting()
     { didSet {
         notificationSetStale = true
-
     }}
     var message: String?
     { didSet {
@@ -192,7 +191,7 @@ class ViewModel: ObservableObject {
         dataStale = true
         isMessage = false
         let url = URL(string: dataURL + action)!
-        print("JsonData from: \(url)")
+        print("Fetching JsonData from: \(url)")
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         do {
