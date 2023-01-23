@@ -19,17 +19,17 @@ struct OptieMonitorApp: App {
         WindowGroup {
             TabView {
                 IntradayView()
-                    .tabItem{
+                    .tabItem {
                         Image(systemName: "calendar.circle")
                         Text("Intraday")
                     }
                 InterdayView()
-                    .tabItem{
+                    .tabItem {
                         Image(systemName: "calendar.circle.fill")
                         Text("Interday")
                     }
                 SettingsView()
-                    .tabItem{
+                    .tabItem {
                         Image(systemName: "gear")
                         Text("Notificaties")
                     }
@@ -47,26 +47,30 @@ extension UIApplication {
 
 // implement AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         application.registerForRemoteNotifications()
         return true
     }
-    //No callback in simulator -- must use device to get valid push token
+
+    // No callback in simulator -- must use device to get valid push token
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        let deviceTokenString = deviceToken.reduce("", {$0 + String(format: "%02X", $1)})
+        let deviceTokenString = deviceToken.reduce("") { $0 + String(format: "%02X", $1) }
         print("Registering deviceTokenString: \(deviceTokenString)")
         let jsonObject: [String: String] = ["deviceToken": deviceTokenString]
         Task {
             await ViewModel().postJSONData(jsonObject, action: "apns")
         }
     }
+
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         print("Failed to register for notifications: \(error.localizedDescription)")
     }
+
     func applicationWillEnterForeground(_ application: UIApplication) {
         print("enter foreground")
     }
 }
+
 class NotificationCenter: NSObject, ObservableObject {
     var dumbData: UNNotificationResponse?
 
@@ -75,19 +79,21 @@ class NotificationCenter: NSObject, ObservableObject {
         UNUserNotificationCenter.current().delegate = self
     }
 }
-extension NotificationCenter: UNUserNotificationCenterDelegate  {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) { }
+
+extension NotificationCenter: UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {}
 
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         dumbData = response
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) { }
+    func userNotificationCenter(_ center: UNUserNotificationCenter, openSettingsFor notification: UNNotification?) {}
 }
+
 class LocalNotification: ObservableObject {
     init() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { (allowed, error) in
-            //This callback does not trigger on main loop be careful
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { allowed, _ in
+            // This callback does not trigger on main loop be careful
             print(allowed ? "Notifications allowed" : "Notifications not allowed")
         }
     }
@@ -99,8 +105,7 @@ class LocalNotification: ObservableObject {
         content.body = body
 
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: when, repeats: false)
-        let request = UNNotificationRequest.init(identifier: "localNotification", content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: "localNotification", content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
     }
 }
-

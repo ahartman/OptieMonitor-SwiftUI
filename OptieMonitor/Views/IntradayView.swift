@@ -58,7 +58,7 @@ struct IntradayView: View {
                   dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $showGraphView) {
-            IntraGraphView(showGraphView: $showGraphView)
+            IntraGraphView1(showGraphView: $showGraphView)
         }
     }
 }

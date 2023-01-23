@@ -31,7 +31,7 @@ struct InterGraphView: View {
                     .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
                     .id(data.id)
                     .padding(20.0)
-                    .frame(width: geo.size.width * 0.9, height: geo.size.height * 0.9, alignment: .bottom)
+                    .frame(width: geo.size.width * 1.0, height: geo.size.height * 1.0, alignment: .bottom)
                     .navigationBarTitle("Interday waarde en index", displayMode: .inline)
                     .navigationBarItems(leading:
                         Button(action: { showGraphView = false })

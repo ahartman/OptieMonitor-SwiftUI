@@ -17,8 +17,8 @@ var notificationSetStale: Bool = false
 
 // set data path
 #if targetEnvironment(simulator)
-let dataURL = "http://cake.local/orders.json?id=ahartman&action="
-//let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
+//let dataURL = "http://cake.local/orders.json?id=ahartman&action="
+let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #else
 //let dataURL = "http://cake.local/orders.json?id=ahartman&action="
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
@@ -77,6 +77,13 @@ struct QuotesList {
     var graphDataG = GroupedBarDataSets(dataSets: [GroupedBarDataSet]())
     var graphDataL = MultiLineDataSet(dataSets: [LineDataSet]())
     var extraLine = [ExtraLineDataPoint]()
+}
+
+struct graphLine: Hashable {
+    var dateTime: Date
+    var type: String
+    var value: Double
+    var index: Int
 }
 
 struct interGraphLine {

@@ -12,7 +12,7 @@ struct RowView: View {
     var quote: TableLine
 
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             Text(quote.datetimeText)
                 .modifier(TextModifier())
             Text(quote.callPriceText)
@@ -32,7 +32,6 @@ struct RowView: View {
             Text(quote.orderValueText)
                 .modifier(TextModifier())
                 .foregroundColor(Color(quote.orderValueColor))
-
             Text(quote.indexText)
                 .modifier(TextModifier())
         }

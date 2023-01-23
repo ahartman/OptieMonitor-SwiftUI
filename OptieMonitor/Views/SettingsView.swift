@@ -17,14 +17,14 @@ struct SettingsView: View {
             Form {
                 Section {
                     Picker(selection: $viewModel.notificationSet.severity, label: Text("Welke mutaties")) {
-                        ForEach(0 ..< severityData.count) {
+                        ForEach(0 ..< 6) {
                             Text(severityData[$0])
                         }
                     }
                 }
                 Section {
-                    Picker(selection: $viewModel.notificationSet.frequency, label: Text("Hoe vaak")) {
-                        ForEach(0 ..< frequencyData.count) {
+                   Picker(selection: $viewModel.notificationSet.frequency, label: Text("Hoe vaak")) {
+                        ForEach(0 ..< 4) {
                             Text(frequencyData[$0])
                         }
                     }

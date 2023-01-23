@@ -12,6 +12,8 @@ import SwiftUICharts
 class ViewModel: ObservableObject {
     @Published var intraday = QuotesList()
     @Published var interday = QuotesList()
+    @Published var intradayGraph = [graphLine]()
+    @Published var interdayGraph = [graphLine]()
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
     { didSet {
@@ -74,8 +76,6 @@ class ViewModel: ObservableObject {
         var putLineSet = [LineChartDataPoint]()
         var extraLineData = [ExtraLineDataPoint]()
 
-        
-
         for line in lines {
             callLineSet.append(LineChartDataPoint(value: line.callValue - lines[0].callValue, xAxisLabel: line.datetimeQuote))
             putLineSet.append(LineChartDataPoint(value: line.putValue - lines[0].putValue, xAxisLabel: line.datetimeQuote))
@@ -95,6 +95,46 @@ class ViewModel: ObservableObject {
             ])
         return (lineData, extraLineData)
 
+    }
+
+    func formatIntraGraph1(lines: [QuoteLine]) -> [graphLine] {
+        var localGraphLines = [graphLine]()
+        //print(lines)
+        for line in lines {
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type: "Call",
+                value: (line.callValue - lines[0].callValue) * line.nrContracts,
+                index: line.indexValue)
+            )
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type: "Put",
+                value: (line.putValue - lines[0].putValue) * line.nrContracts,
+                index: line.indexValue)
+            )
+        }
+        print(localGraphLines.count)
+        return (localGraphLines)
+    }
+
+    func formatInterGraph1(lines: [QuoteLine]) -> [graphLine] {
+        var localGraphLines = [graphLine]()
+        for line in lines {
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type:"Call",
+                value: line.callValue,
+                index: line.indexValue)
+            )
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type:"Put",
+                value: line.putValue,
+                index: line.indexValue)
+            )
+        }
+        return (localGraphLines)
     }
 
     func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
@@ -176,6 +216,7 @@ class ViewModel: ObservableObject {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
         (intraday.graphDataL, intraday.extraLine) = formatIntraGraph(lines: result.intradays)
+        intradayGraph = formatIntraGraph1(lines: result.intradays)
 
         interday.list = formatList(lines: result.interdays)
         interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
