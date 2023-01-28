@@ -39,7 +39,7 @@ struct InterGraphView: View {
                     AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)))
                 }
             }
-           .chartYAxisLabel("Mutatie in €", position: .leading)
+           .chartYAxisLabel("Waarde in €", position: .leading)
             .chartForegroundStyleScale(
                 ["Call": .green, "Put": .purple]
             )
