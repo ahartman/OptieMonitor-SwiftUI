@@ -28,7 +28,6 @@ class ViewModel: ObservableObject {
 
     init() {
         if let data = UserDefaults.standard.data(forKey: "OptieMonitor") {
-            // print("UserDefaults saved data found")
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601
@@ -50,56 +49,27 @@ class ViewModel: ObservableObject {
         return formatter.string(for: dateIn)!
     }
 
-    func formatInterGraph(lines: [QuoteLine]) -> (StackedBarDataSets, [ExtraLineDataPoint], GroupedBarDataSets) {
-        var stackSets = [StackedBarDataSet]()
-        var groupSets = [GroupedBarDataSet]()
-        var extraLineData = [ExtraLineDataPoint]()
-
-        for line in lines {
-            stackSets.append(StackedBarDataSet(dataPoints: [
-                StackedBarDataPoint(value: line.callValue * line.nrContracts, group: GroupData.call.data),
-                StackedBarDataPoint(value: line.putValue * line.nrContracts, group: GroupData.put.data),
-            ], setTitle: line.datetimeQuote))
-
-            groupSets.append(GroupedBarDataSet(dataPoints: [
-                GroupedBarDataPoint(value: line.callValue * line.nrContracts, group: GroupData.call.data),
-                GroupedBarDataPoint(value: line.putValue * line.nrContracts, group: GroupData.put.data),
-            ], setTitle: line.datetimeQuote))
-
-            extraLineData.append(ExtraLineDataPoint(value: Double(line.indexValue)))
-        }
-        return (StackedBarDataSets(dataSets: stackSets), extraLineData, GroupedBarDataSets(dataSets: groupSets))
-    }
-
-    func formatIntraGraph(lines: [QuoteLine]) -> (MultiLineDataSet, [ExtraLineDataPoint]) {
-        var callLineSet = [LineChartDataPoint]()
-        var putLineSet = [LineChartDataPoint]()
-        var extraLineData = [ExtraLineDataPoint]()
-
-        for line in lines {
-            callLineSet.append(LineChartDataPoint(value: line.callValue - lines[0].callValue, xAxisLabel: line.datetimeQuote))
-            putLineSet.append(LineChartDataPoint(value: line.putValue - lines[0].putValue, xAxisLabel: line.datetimeQuote))
-            extraLineData.append(ExtraLineDataPoint(value: Double(line.indexValue)))
-        }
-
-        let lineData = MultiLineDataSet(dataSets: [
-            LineDataSet(dataPoints: callLineSet,
-                                              legendTitle: "Call",
-                                              pointStyle: PointStyle(pointType: .filled, pointShape: .square),
-                                              style: LineStyle(lineColour: ColourStyle(colour: .red), lineType: .curvedLine)),
-            LineDataSet(dataPoints: putLineSet,
-                                              legendTitle: "Put",
-                                              pointStyle: PointStyle(pointType: .filled, pointShape: .square),
-                                              style: LineStyle(lineColour: ColourStyle(colour: .blue), lineType: .curvedLine))
-
-            ])
-        return (lineData, extraLineData)
-
-    }
-
-    func formatIntraGraph1(lines: [QuoteLine]) -> [graphLine] {
+    func formatInterGraph(lines: [QuoteLine]) -> [graphLine] {
         var localGraphLines = [graphLine]()
-        //print(lines)
+        for line in lines {
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type: "Call",
+                value: line.callValue * line.nrContracts,
+                index: line.indexValue)
+            )
+            localGraphLines.append(graphLine(
+                dateTime: line.datetime,
+                type: "Put",
+                value: line.putValue * line.nrContracts,
+                index: line.indexValue)
+            )
+        }
+        return (localGraphLines)
+    }
+
+    func formatIntraGraph(lines: [QuoteLine]) -> [graphLine] {
+        var localGraphLines = [graphLine]()
         for line in lines {
             localGraphLines.append(graphLine(
                 dateTime: line.datetime,
@@ -111,26 +81,6 @@ class ViewModel: ObservableObject {
                 dateTime: line.datetime,
                 type: "Put",
                 value: (line.putValue - lines[0].putValue) * line.nrContracts,
-                index: line.indexValue)
-            )
-        }
-        print(localGraphLines.count)
-        return (localGraphLines)
-    }
-
-    func formatInterGraph1(lines: [QuoteLine]) -> [graphLine] {
-        var localGraphLines = [graphLine]()
-        for line in lines {
-            localGraphLines.append(graphLine(
-                dateTime: line.datetime,
-                type:"Call",
-                value: line.callValue,
-                index: line.indexValue)
-            )
-            localGraphLines.append(graphLine(
-                dateTime: line.datetime,
-                type:"Put",
-                value: line.putValue,
                 index: line.indexValue)
             )
         }
@@ -149,7 +99,7 @@ class ViewModel: ObservableObject {
             callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue) - 1)!,
             putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue) - 1)!,
             orderPercent: Formatter.percentage.string(for: (tempLast/tempFirst) - 1)!,
-            index: String(lastLine!.indexValue)
+            index: lastLine!.indexValue
         ))
 
         if sender == "intra" {
@@ -160,7 +110,7 @@ class ViewModel: ObservableObject {
                 callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue) - 1)!,
                 putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue) - 1)!,
                 orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1) - 1)!,
-                index: String(openLine.indexValue)
+                index: openLine.indexValue
             ))
         }
         return footer
@@ -169,7 +119,7 @@ class ViewModel: ObservableObject {
     func formatList(lines: [QuoteLine]) -> [TableLine] {
         var temp: Double
         var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
-        var linesFormatted = [TableLine]()
+        var localLines = [TableLine]()
 
         for (index, line) in lines.enumerated() {
             var lineFormatted = TableLine()
@@ -196,9 +146,9 @@ class ViewModel: ObservableObject {
             temp = line.putValue - firstLine.putValue
             lineFormatted.putDeltaText = (temp == 0) ? "" : Formatter.amount2.string(for: temp)!
             lineFormatted.putDeltaColor = setColor(delta: temp)
-            linesFormatted.append(lineFormatted)
+            localLines.append(lineFormatted)
         }
-        return linesFormatted
+        return localLines
     }
 
     func setColor(delta: Double) -> UIColor {
@@ -215,17 +165,17 @@ class ViewModel: ObservableObject {
     func unpackJSON(result: RestData) {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        (intraday.graphDataL, intraday.extraLine) = formatIntraGraph(lines: result.intradays)
-        intradayGraph = formatIntraGraph1(lines: result.intradays)
+        intradayGraph = formatIntraGraph(lines: result.intradays)
 
         interday.list = formatList(lines: result.interdays)
         interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        (interday.graphDataS, interday.extraLine, interday.graphDataG) = formatInterGraph(lines: result.interdays)
+        interdayGraph = formatInterGraph(lines: result.interdays)
 
         caption = result.caption
         message = result.message
         notificationSet = result.notificationSettings
-        datetimeText = formatDate(dateIn: result.datetime)
+        quoteDatetime = result.datetime
+        quoteDatetimeText = formatDate(dateIn: result.datetime)
     }
 
     func getJsonData(action: String) async {

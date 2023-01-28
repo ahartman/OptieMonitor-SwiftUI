@@ -11,7 +11,6 @@
 		E83005342548066600B2CA56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005332548066600B2CA56 /* Preview Assets.xcassets */; };
 		E830055F25480C5400B2CA56 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830055D25480C5400B2CA56 /* Models.swift */; };
 		E830056025480C5400B2CA56 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830055E25480C5400B2CA56 /* ViewModel.swift */; };
-		E830056C25480CB500B2CA56 /* IntraGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056425480CB500B2CA56 /* IntraGraphView.swift */; };
 		E830056D25480CB500B2CA56 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056525480CB500B2CA56 /* HeaderView.swift */; };
 		E830056F25480CB500B2CA56 /* InterGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056725480CB500B2CA56 /* InterGraphView.swift */; };
 		E830057025480CB500B2CA56 /* InterdayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056825480CB500B2CA56 /* InterdayView.swift */; };
@@ -19,8 +18,7 @@
 		E830057225480CB500B2CA56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056A25480CB500B2CA56 /* SettingsView.swift */; };
 		E830057325480CB500B2CA56 /* IntradayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E830056B25480CB500B2CA56 /* IntradayView.swift */; };
 		E83005812548138100B2CA56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E83005802548138100B2CA56 /* Assets.xcassets */; };
-		E8434413297A7C4F00929E17 /* IntraGraphView1.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8434412297A7C4F00929E17 /* IntraGraphView1.swift */; };
-		E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = E895DA4C274FB7E40069F3A6 /* SwiftUICharts */; };
+		E8434413297A7C4F00929E17 /* IntraGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8434412297A7C4F00929E17 /* IntraGraphView.swift */; };
 		E8B66D65266A067C00C071CE /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B66D64266A067C00C071CE /* FooterView.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,7 +30,6 @@
 		E830055425480B6300B2CA56 /* OptieMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OptieMonitor.entitlements; sourceTree = "<group>"; };
 		E830055D25480C5400B2CA56 /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		E830055E25480C5400B2CA56 /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
-		E830056425480CB500B2CA56 /* IntraGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntraGraphView.swift; sourceTree = "<group>"; };
 		E830056525480CB500B2CA56 /* HeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		E830056725480CB500B2CA56 /* InterGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterGraphView.swift; sourceTree = "<group>"; };
 		E830056825480CB500B2CA56 /* InterdayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterdayView.swift; sourceTree = "<group>"; };
@@ -40,7 +37,7 @@
 		E830056A25480CB500B2CA56 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E830056B25480CB500B2CA56 /* IntradayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntradayView.swift; sourceTree = "<group>"; };
 		E83005802548138100B2CA56 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E8434412297A7C4F00929E17 /* IntraGraphView1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntraGraphView1.swift; sourceTree = "<group>"; };
+		E8434412297A7C4F00929E17 /* IntraGraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntraGraphView.swift; sourceTree = "<group>"; };
 		E8B66D64266A067C00C071CE /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,7 +46,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E895DA4D274FB7E40069F3A6 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,8 +104,7 @@
 			children = (
 				E830056B25480CB500B2CA56 /* IntradayView.swift */,
 				E830056825480CB500B2CA56 /* InterdayView.swift */,
-				E830056425480CB500B2CA56 /* IntraGraphView.swift */,
-				E8434412297A7C4F00929E17 /* IntraGraphView1.swift */,
+				E8434412297A7C4F00929E17 /* IntraGraphView.swift */,
 				E830056725480CB500B2CA56 /* InterGraphView.swift */,
 				E830056525480CB500B2CA56 /* HeaderView.swift */,
 				E830056925480CB500B2CA56 /* RowView.swift */,
@@ -136,7 +131,6 @@
 			);
 			name = OptieMonitor;
 			packageProductDependencies = (
-				E895DA4C274FB7E40069F3A6 /* SwiftUICharts */,
 			);
 			productName = OptieMonitor;
 			productReference = E83005292548066400B2CA56 /* OptieMonitor.app */;
@@ -166,7 +160,6 @@
 			);
 			mainGroup = E83005202548066400B2CA56;
 			packageReferences = (
-				E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
 			);
 			productRefGroup = E830052A2548066400B2CA56 /* Products */;
 			projectDirPath = "";
@@ -202,9 +195,8 @@
 				E830056025480C5400B2CA56 /* ViewModel.swift in Sources */,
 				E830052D2548066400B2CA56 /* OptieMonitorApp.swift in Sources */,
 				E830057325480CB500B2CA56 /* IntradayView.swift in Sources */,
-				E8434413297A7C4F00929E17 /* IntraGraphView1.swift in Sources */,
+				E8434413297A7C4F00929E17 /* IntraGraphView.swift in Sources */,
 				E830056F25480CB500B2CA56 /* InterGraphView.swift in Sources */,
-				E830056C25480CB500B2CA56 /* IntraGraphView.swift in Sources */,
 				E830057225480CB500B2CA56 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -339,12 +331,13 @@
 				DEVELOPMENT_TEAM = V2LV7426WZ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OptieMonitor/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -363,12 +356,13 @@
 				DEVELOPMENT_TEAM = V2LV7426WZ;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = OptieMonitor/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 4.0;
+				MARKETING_VERSION = 8.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ahartman.OptieMonitor;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -398,25 +392,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/willdale/SwiftUICharts.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		E895DA4C274FB7E40069F3A6 /* SwiftUICharts */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E895DA4B274FB7E30069F3A6 /* XCRemoteSwiftPackageReference "SwiftUICharts" */;
-			productName = SwiftUICharts;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E83005212548066400B2CA56 /* Project object */;
 }

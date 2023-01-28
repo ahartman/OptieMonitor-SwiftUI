@@ -5,78 +5,57 @@
 //  Created by André Hartman on 14/10/2020.
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
+import Charts
 import SwiftUI
-import SwiftUICharts
 
 struct InterGraphView: View {
     @EnvironmentObject var viewModel: ViewModel
     @Binding var showGraphView: Bool
-
-    let data = makeData()
-    let extraLineData = makeExtra()
-
+    
     var body: some View {
         NavigationView {
-            GeometryReader { geo in
-                StackedBarChart(chartData: data)
-                    .extraLine(chartData: data,
-                               legendTitle: "Index",
-                               datapoints: extraLineData,
-                               style: extraLineStyle)
-                    .xAxisGrid(chartData: data)
-                    .xAxisLabels(chartData: data)
-                    .yAxisGrid(chartData: data)
-                    .yAxisLabels(chartData: data)
-                    .extraYAxisLabels(chartData: data, colourIndicator: .style(size: 12))
-                    .legends(chartData: data, columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())])
-                    .id(data.id)
-                    .padding(20.0)
-                    .frame(width: geo.size.width * 1.0, height: geo.size.height * 1.0, alignment: .bottom)
-                    .navigationBarTitle("Interday waarde en index", displayMode: .inline)
-                    .navigationBarItems(leading:
-                        Button(action: { showGraphView = false })
-                            { Image(systemName: "table") })
+            Chart {
+                ForEach(viewModel.interdayGraph, id: \.self) { line in
+                    BarMark(
+                        x: .value("Datum", line.dateTime),
+                        y: .value("Waarde in €", line.value)
+                    )
+                    .foregroundStyle(by: .value("Type Color", line.type))
+                }
             }
+            .chartXAxis() {
+                AxisMarks() { date in
+                    AxisGridLine()
+                    AxisValueLabel(
+                        format: .dateTime.day(.twoDigits).month(.twoDigits),
+                        centered: false,
+                        collisionResolution: .automatic)
+                }
+            }
+            .chartXAxisLabel("Datum", position: .bottom)
+            .chartYAxis() {
+                AxisMarks(position: .leading) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)))
+                }
+            }
+           .chartYAxisLabel("Mutatie in €", position: .leading)
+            .chartForegroundStyleScale(
+                ["Call": .green, "Put": .purple]
+            )
+            .padding(20.0)
+            .navigationBarTitle("Interday waarde ", displayMode: .inline)
+            .navigationBarItems(leading:
+                                    Button(action: { showGraphView = false })
+                                { Image(systemName: "table") })
         }
-    }
-
-    private var extraLineStyle: ExtraLineStyle {
-        ExtraLineStyle(lineColour: ColourStyle(colour: .black),
-                       lineType: .line,
-                       lineSpacing: .bar,
-                       yAxisTitle: "Index",
-                       yAxisNumberOfLabels: 11,
-                       animationType: .raise,
-                       baseline: .minimumValue)
-    }
-
-    static func makeData() -> StackedBarChartData {
-        let data = ViewModel().interday.graphDataS
-        let groups = [GroupData.call.data, GroupData.put.data]
-        let gridStyle = GridStyle(numberOfLines: 5,
-                                  lineColour: Color.gray.opacity(0.75))
-
-        return StackedBarChartData(dataSets: data,
-                                   groups: groups,
-                                   barStyle: BarStyle(barWidth: 0.5),
-                                   chartStyle: BarChartStyle(
-                                       infoBoxPlacement: .header,
-                                       xAxisGridStyle: gridStyle,
-                                       xAxisLabelsFrom: .dataPoint(rotation: .degrees(-90)),
-                                       yAxisGridStyle: gridStyle,
-                                       yAxisNumberOfLabels: 11,
-                                       baseline: .zero))
-    }
-
-    static func makeExtra() -> [ExtraLineDataPoint] {
-        return ViewModel().interday.extraLine
     }
 }
 
 /*
  struct InterGraphView_Previews: PreviewProvider {
-     static var previews: some View {
-         InterGraphView()
-     }
+ static var previews: some View {
+ InterGraphView()
+ }
  }
  */

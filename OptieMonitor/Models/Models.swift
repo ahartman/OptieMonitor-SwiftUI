@@ -11,7 +11,8 @@ import SwiftUICharts
 var intraFooter: [FooterLine] = []
 var interFooter: [FooterLine] = []
 var caption: String = ""
-var datetimeText: String = ""
+var quoteDatetime: Date? = nil
+var quoteDatetimeText: String = ""
 var dataStale: Bool = true
 var notificationSetStale: Bool = false
 
@@ -73,23 +74,12 @@ struct QuotesList {
     var list = [TableLine]()
     var footer = [FooterLine]()
     var graphLine = [String: Any]()
-    var graphDataS = StackedBarDataSets(dataSets: [StackedBarDataSet]())
-    var graphDataG = GroupedBarDataSets(dataSets: [GroupedBarDataSet]())
-    var graphDataL = MultiLineDataSet(dataSets: [LineDataSet]())
-    var extraLine = [ExtraLineDataPoint]()
 }
 
 struct graphLine: Hashable {
     var dateTime: Date
     var type: String
     var value: Double
-    var index: Int
-}
-
-struct interGraphLine {
-    var label: String
-    var call: Int
-    var put: Int
     var index: Int
 }
 
@@ -113,21 +103,7 @@ struct FooterLine: Hashable {
     var callPercent: String = ""
     var putPercent: String = ""
     var orderPercent: String = ""
-    var index: String = ""
-}
-
-enum GroupData {
-    case call
-    case put
-
-    var data: GroupingData {
-        switch self {
-        case .call:
-            return GroupingData(title: "Call", colour: ColourStyle(colour: .red))
-        case .put:
-            return GroupingData(title: "Put", colour: ColourStyle(colour: .blue))
-        }
-    }
+    var index: Int = 0
 }
 
 // Extensions
@@ -166,7 +142,6 @@ extension Formatter {
 
     static var percentage: NumberFormatter {
         let nf = NumberFormatter()
-        nf.maximumFractionDigits = 0
         nf.positivePrefix = nf.plusSign
         nf.numberStyle = .percent
         return nf

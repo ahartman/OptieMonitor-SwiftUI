@@ -19,11 +19,10 @@ struct IntradayView: View {
                     Section(
                         header: HeaderView(),
                         footer: FooterView(footerLines: viewModel.intraday.footer)
-                    )
-                        { ForEach(viewModel.intraday.list, id: \.id) { quote in
-                            RowView(quote: quote)
-                        }
-                        }
+                    ) { ForEach(viewModel.intraday.list, id: \.id) { quote in
+                        RowView(quote: quote)
+                    }
+                    }
                 }
                 .listStyle(GroupedListStyle())
                 .environment(\.defaultMinListRowHeight, 10)
@@ -58,14 +57,16 @@ struct IntradayView: View {
                   dismissButton: .default(Text("OK")))
         }
         .sheet(isPresented: $showGraphView) {
-            IntraGraphView1(showGraphView: $showGraphView)
+            IntraGraphView(showGraphView: $showGraphView)
         }
     }
 }
 
-struct IntradayView_Previews: PreviewProvider {
-    static let viewModel = ViewModel()
-    static var previews: some View {
-            IntradayView().environmentObject(viewModel)
-    }
-}
+/*
+ struct IntradayView_Previews: PreviewProvider {
+ static let viewModel = ViewModel()
+ static var previews: some View {
+ IntradayView().environmentObject(viewModel)
+ }
+ }
+ */

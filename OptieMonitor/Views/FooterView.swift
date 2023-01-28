@@ -23,8 +23,8 @@ struct FooterView: View {
 }
 
 struct FooterRowView: View {
-    var footerLine: FooterLine
     @Environment(\.verticalSizeClass) var sizeClass
+    var footerLine: FooterLine
 
     var body: some View {
         HStack {

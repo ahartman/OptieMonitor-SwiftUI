@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct HeaderView: View {
-    //@EnvironmentObject var viewModel: ViewModel
     @Environment(\.verticalSizeClass) var sizeClass
 
     var body: some View {
@@ -17,7 +16,7 @@ struct HeaderView: View {
                 .modifier(StaleModifier())
                 .padding(.bottom)
             HStack {
-                Text("\(datetimeText)")
+                Text("\(quoteDatetimeText)")
                     .modifier(TextModifier())
                 Text("Call")
                     .modifier(TextModifier())
