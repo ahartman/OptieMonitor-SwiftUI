@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct InterdayView: View {
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var model: ViewModel
     @State var showGraphView = false
 
     var body: some View {
         NavigationView {
             List {
                 Section(header: HeaderView(),
-                        footer: FooterView(footerLines: viewModel.interday.footer)) {
-                    ForEach(viewModel.interday.list, id: \.id) { quote in
-                        RowView(quote: quote)
+                        footer: FooterView(footerLines: model.interday.footer)) {
+                    ForEach(model.interday.list, id: \.id) { line in
+                        RowView(line: line)
                     }
                 }
             }

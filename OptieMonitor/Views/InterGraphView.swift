@@ -9,13 +9,13 @@ import Charts
 import SwiftUI
 
 struct InterGraphView: View {
-    @EnvironmentObject var viewModel: ViewModel
+    @EnvironmentObject var model: ViewModel
     @Binding var showGraphView: Bool
 
     var body: some View {
         NavigationView {
             Chart {
-                ForEach(viewModel.interday.graph, id: \.self) { element in
+                ForEach(model.interday.graph, id: \.self) { element in
                     BarMark(
                         x: .value("Datum", element.dateTime),
                         y: .value("Waarde in €", element.value)
@@ -35,7 +35,7 @@ struct InterGraphView: View {
             }
             .chartXAxisLabel("Datum", position: .bottom)
             .chartYAxis {
-                AxisMarks(preset: .aligned, position: .leading, values: viewModel.interday.yValues) { _ in
+                AxisMarks(preset: .aligned, position: .leading, values: model.interday.yValues) { _ in
                     AxisGridLine()
                     AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)))
                 }

@@ -9,30 +9,30 @@ import SwiftUI
 
 struct RowView: View {
     @Environment(\.verticalSizeClass) var sizeClass
-    var quote: TableLine
+    var line: TableLine
 
     var body: some View {
         HStack(spacing: 0) {
-            Text(quote.datetimeText)
+            Text(line.datetimeText)
                 .modifier(TextModifier())
-            Text(quote.callPriceText)
-                .modifier(TextModifier())
-            if sizeClass == .compact {
-                Text(quote.callDeltaText)
-                    .modifier(TextModifier())
-                    .foregroundColor(Color(quote.callDeltaColor))
-            }
-            Text(quote.putPriceText)
+            Text(line.callPriceText)
                 .modifier(TextModifier())
             if sizeClass == .compact {
-                Text(quote.putDeltaText)
+                Text(line.callDeltaText)
                     .modifier(TextModifier())
-                    .foregroundColor(Color(quote.putDeltaColor))
+                    .foregroundColor(Color(line.callDeltaColor))
             }
-            Text(quote.orderValueText)
+            Text(line.putPriceText)
                 .modifier(TextModifier())
-                .foregroundColor(Color(quote.orderValueColor))
-            Text(quote.indexText)
+            if sizeClass == .compact {
+                Text(line.putDeltaText)
+                    .modifier(TextModifier())
+                    .foregroundColor(Color(line.putDeltaColor))
+            }
+            Text(line.orderValueText)
+                .modifier(TextModifier())
+                .foregroundColor(Color(line.orderValueColor))
+            Text(line.indexText)
                 .modifier(TextModifier())
         }
     }

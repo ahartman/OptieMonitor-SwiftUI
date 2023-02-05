@@ -6,7 +6,6 @@
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
 import SwiftUI
-//import SwiftUICharts
 
 var intraFooter: [FooterLine] = []
 var interFooter: [FooterLine] = []
@@ -15,9 +14,6 @@ var quoteDatetime: Date? = nil
 var quoteDatetimeText: String = ""
 var dataStale: Bool = true
 var notificationSetStale: Bool = false
-
-var intrayScale = YScale(yMin: 0.0, yMax: 0.0)
-var interyScale = YScale(yMin: 0.0, yMax: 0.0)
 
 // set data path
 #if targetEnvironment(simulator)
@@ -28,11 +24,7 @@ let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action=
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #endif
 
-struct YScale {
-    var yMin: Double
-    var yMax: Double
-}
-
+// Incoming
 struct IncomingData: Decodable {
     let message: String?
     let datetime: Date
@@ -47,7 +39,6 @@ struct IncomingData: Decodable {
         case interdays = "interday"
     }
 }
-
 struct IncomingLine: Decodable {
     var id: Int
     var datetime: Date
@@ -65,7 +56,6 @@ struct IncomingLine: Decodable {
         case indexValue = "index1"
     }
 }
-
 struct NotificationSetting: Codable {
     var frequency: Int = 0
     var severity: Int = 0
@@ -78,20 +68,13 @@ struct NotificationSetting: Codable {
     }
 }
 
+// Display
 struct DisplayData {
     var list = [TableLine]()
     var footer = [FooterLine]()
     var graph = [GraphLine]()
     var yValues = [Double]()
 }
-
-struct GraphLine: Hashable {
-    var dateTime: Date
-    var type: String
-    var value: Double
-    var index: Int
-}
-
 struct TableLine {
     var id: Int = 0
     var datetimeText: String = ""
@@ -105,7 +88,6 @@ struct TableLine {
     var orderValueColor = UIColor.black
     var indexText: String = ""
 }
-
 struct FooterLine: Hashable {
     let id = UUID()
     var label: String = ""
@@ -113,6 +95,12 @@ struct FooterLine: Hashable {
     var putPercent: String = ""
     var orderPercent: String = ""
     var index: Int = 0
+}
+struct GraphLine: Hashable {
+    var dateTime: Date
+    var type: String
+    var value: Double
+    var index: Int
 }
 
 // Extensions

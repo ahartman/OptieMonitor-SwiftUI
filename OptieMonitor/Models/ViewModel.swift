@@ -82,7 +82,7 @@ class ViewModel: ObservableObject {
         return (localGraphLines, yValues)
     }
 
-    func formatFooter(lines: [IncomingLine], sender: String = "") -> [FooterLine] {
+    func formatFooter(lines: [IncomingLine], openLine: IncomingLine, sender: String = "") -> [FooterLine] {
         let firstLine = lines.first
         let lastLine = lines.last
         var footer = [FooterLine]()
@@ -98,14 +98,14 @@ class ViewModel: ObservableObject {
 
         if sender == "intra" {
             let tempLast1 = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
-            //let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
-            let tempFirst1 = (firstLine!.callValue + firstLine!.putValue) * firstLine!.nrContracts
+            let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
             footer.append(FooterLine(
                 label: sender == "intra" ? "Order" : "",
-                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue) - 1)!,
-                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue) - 1)!,
+                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue) - 1)!,
+                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue) - 1)!,
                 orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1) - 1)!,
-                index: firstLine!.indexValue))
+                index: openLine.indexValue
+            ))
         }
         return footer
     }
@@ -158,11 +158,11 @@ class ViewModel: ObservableObject {
     // =========================
     func unpackJSON(result: IncomingData) {
         intraday.list = formatList(lines: result.intradays)
-        intraday.footer = formatFooter(lines: result.intradays, sender: "intra")
+        intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
         (intraday.graph, intraday.yValues) = formatGraph(lines: result.intradays, sender: "intra")
 
         interday.list = formatList(lines: result.interdays)
-        interday.footer = formatFooter(lines: result.interdays)
+        interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
         (interday.graph, interday.yValues) = formatGraph(lines: result.interdays)
 
         caption = result.caption
