@@ -6,7 +6,7 @@
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
 import SwiftUI
-import SwiftUICharts
+//import SwiftUICharts
 
 var intraFooter: [FooterLine] = []
 var interFooter: [FooterLine] = []
@@ -15,6 +15,9 @@ var quoteDatetime: Date? = nil
 var quoteDatetimeText: String = ""
 var dataStale: Bool = true
 var notificationSetStale: Bool = false
+
+var intrayScale = YScale(yMin: 0.0, yMax: 0.0)
+var interyScale = YScale(yMin: 0.0, yMax: 0.0)
 
 // set data path
 #if targetEnvironment(simulator)
@@ -25,12 +28,17 @@ let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action=
 let dataURL = "https://nastifou.synology.me:1010/orders.json?id=ahartman&action="
 #endif
 
-struct RestData: Decodable {
+struct YScale {
+    var yMin: Double
+    var yMax: Double
+}
+
+struct IncomingData: Decodable {
     let message: String?
     let datetime: Date
     let notificationSettings: NotificationSetting
-    let intradays: [QuoteLine]
-    let interdays: [QuoteLine]
+    let intradays: [IncomingLine]
+    let interdays: [IncomingLine]
     let caption: String
 
     enum CodingKeys: String, CodingKey {
@@ -40,7 +48,7 @@ struct RestData: Decodable {
     }
 }
 
-struct QuoteLine: Decodable {
+struct IncomingLine: Decodable {
     var id: Int
     var datetime: Date
     var datetimeQuote: String
@@ -70,13 +78,14 @@ struct NotificationSetting: Codable {
     }
 }
 
-struct QuotesList {
+struct DisplayData {
     var list = [TableLine]()
     var footer = [FooterLine]()
-    var graphLine = [String: Any]()
+    var graph = [GraphLine]()
+    var yValues = [Double]()
 }
 
-struct graphLine: Hashable {
+struct GraphLine: Hashable {
     var dateTime: Date
     var type: String
     var value: Double

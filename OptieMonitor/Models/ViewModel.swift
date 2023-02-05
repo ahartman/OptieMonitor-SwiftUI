@@ -6,14 +6,13 @@
 //  Copyright © 2020 André Hartman. All rights reserved.
 //
 import SwiftUI
-import SwiftUICharts
 
 @MainActor
 class ViewModel: ObservableObject {
-    @Published var intraday = QuotesList()
-    @Published var interday = QuotesList()
-    @Published var intradayGraph = [graphLine]()
-    @Published var interdayGraph = [graphLine]()
+    @Published var intraday = DisplayData()
+    @Published var interday = DisplayData()
+    @Published var intradayGraph = [GraphLine]()
+    @Published var interdayGraph = [GraphLine]()
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
     { didSet {
@@ -31,7 +30,7 @@ class ViewModel: ObservableObject {
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .iso8601
-                let savedData = try decoder.decode(RestData.self, from: data)
+                let savedData = try decoder.decode(IncomingData.self, from: data)
                 unpackJSON(result: savedData)
             } catch {
                 print("JSON error from UserDefaults:", error)
@@ -49,45 +48,41 @@ class ViewModel: ObservableObject {
         return formatter.string(for: dateIn)!
     }
 
-    func formatInterGraph(lines: [QuoteLine]) -> [graphLine] {
-        var localGraphLines = [graphLine]()
+    func formatGraph(lines: [IncomingLine], sender: String = "") -> ([GraphLine], [Double]) {
+        var localGraphLines = [GraphLine]()
+        var yMin = 0.0
+        var yMax = 0.0
+        let rounding = (sender == "intra") ? 250.0 : 1000.0
+        let firstCallValue = (sender == "intra") ? lines[0].callValue : 0
+        let firstPutValue = (sender == "intra") ? lines[0].putValue : 0
+
         for line in lines {
-            localGraphLines.append(graphLine(
+            let callValue = (line.callValue - firstCallValue) * line.nrContracts
+            let putValue = (line.putValue - firstPutValue) * line.nrContracts
+
+            localGraphLines.append(GraphLine(
                 dateTime: line.datetime,
                 type: "Call",
-                value: line.callValue * line.nrContracts,
+                value: callValue,
                 index: line.indexValue)
             )
-            localGraphLines.append(graphLine(
+            localGraphLines.append(GraphLine(
                 dateTime: line.datetime,
                 type: "Put",
-                value: line.putValue * line.nrContracts,
+                value: putValue,
                 index: line.indexValue)
             )
+
+            yMax = max(yMax, callValue, putValue, callValue + putValue)
+            yMin = min(yMin, callValue, putValue, callValue + putValue)
         }
-        return (localGraphLines)
+        yMax = (yMax/rounding).rounded(.awayFromZero) * rounding
+        yMin = (yMin/rounding).rounded(.awayFromZero) * rounding
+        let yValues = stride(from: yMin, through: yMax, by: rounding).map { $0 }
+        return (localGraphLines, yValues)
     }
 
-    func formatIntraGraph(lines: [QuoteLine]) -> [graphLine] {
-        var localGraphLines = [graphLine]()
-        for line in lines {
-            localGraphLines.append(graphLine(
-                dateTime: line.datetime,
-                type: "Call",
-                value: (line.callValue - lines[0].callValue) * line.nrContracts,
-                index: line.indexValue)
-            )
-            localGraphLines.append(graphLine(
-                dateTime: line.datetime,
-                type: "Put",
-                value: (line.putValue - lines[0].putValue) * line.nrContracts,
-                index: line.indexValue)
-            )
-        }
-        return (localGraphLines)
-    }
-
-    func formatFooter(lines: [QuoteLine], openLine: QuoteLine, sender: String = "") -> [FooterLine] {
+    func formatFooter(lines: [IncomingLine], sender: String = "") -> [FooterLine] {
         let firstLine = lines.first
         let lastLine = lines.last
         var footer = [FooterLine]()
@@ -99,26 +94,25 @@ class ViewModel: ObservableObject {
             callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue) - 1)!,
             putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue) - 1)!,
             orderPercent: Formatter.percentage.string(for: (tempLast/tempFirst) - 1)!,
-            index: lastLine!.indexValue
-        ))
+            index: lastLine!.indexValue))
 
         if sender == "intra" {
             let tempLast1 = (lastLine!.callValue + lastLine!.putValue) * lastLine!.nrContracts
-            let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
+            //let tempFirst1 = (openLine.callValue + openLine.putValue) * openLine.nrContracts
+            let tempFirst1 = (firstLine!.callValue + firstLine!.putValue) * firstLine!.nrContracts
             footer.append(FooterLine(
                 label: sender == "intra" ? "Order" : "",
-                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue) - 1)!,
-                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue) - 1)!,
+                callPercent: Formatter.percentage.string(for: (lastLine!.callValue/firstLine!.callValue) - 1)!,
+                putPercent: Formatter.percentage.string(for: (lastLine!.putValue/firstLine!.putValue) - 1)!,
                 orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1) - 1)!,
-                index: openLine.indexValue
-            ))
+                index: firstLine!.indexValue))
         }
         return footer
     }
 
-    func formatList(lines: [QuoteLine]) -> [TableLine] {
+    func formatList(lines: [IncomingLine]) -> [TableLine] {
         var temp: Double
-        var firstLine = QuoteLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
+        var firstLine = IncomingLine(id: 0, datetime: Date(), datetimeQuote: "", callValue: 0.0, putValue: 0.0, indexValue: 0, nrContracts: 0.0)
         var localLines = [TableLine]()
 
         for (index, line) in lines.enumerated() {
@@ -162,14 +156,14 @@ class ViewModel: ObservableObject {
     }
 
     // =========================
-    func unpackJSON(result: RestData) {
+    func unpackJSON(result: IncomingData) {
         intraday.list = formatList(lines: result.intradays)
-        intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        intradayGraph = formatIntraGraph(lines: result.intradays)
+        intraday.footer = formatFooter(lines: result.intradays, sender: "intra")
+        (intraday.graph, intraday.yValues) = formatGraph(lines: result.intradays, sender: "intra")
 
         interday.list = formatList(lines: result.interdays)
-        interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        interdayGraph = formatInterGraph(lines: result.interdays)
+        interday.footer = formatFooter(lines: result.interdays)
+        (interday.graph, interday.yValues) = formatGraph(lines: result.interdays)
 
         caption = result.caption
         message = result.message
@@ -188,7 +182,7 @@ class ViewModel: ObservableObject {
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             UserDefaults.standard.set(data, forKey: "OptieMonitor") // persist in UserDefaults
-            let incomingData = try decoder.decode(RestData.self, from: data)
+            let incomingData = try decoder.decode(IncomingData.self, from: data)
             unpackJSON(result: incomingData)
             dataStale = false
             notificationSetStale = false

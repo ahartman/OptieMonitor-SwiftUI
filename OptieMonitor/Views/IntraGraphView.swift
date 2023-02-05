@@ -11,19 +11,19 @@ import SwiftUI
 struct IntraGraphView: View {
     @EnvironmentObject var viewModel: ViewModel
     @Binding var showGraphView: Bool
- 
+
     var body: some View {
         NavigationView {
             Chart {
-                ForEach(viewModel.intradayGraph, id: \.self) { line in
+                ForEach(viewModel.intraday.graph, id: \.self) { element in
                     BarMark(
-                        x: .value("Uur", line.dateTime),
-                        y: .value("Mutatie in €", line.value)
+                        x: .value("Uur", element.dateTime),
+                        y: .value("Mutatie in €", element.value)
                     )
-                    .foregroundStyle(by: .value("Type Color", line.type))
+                    .foregroundStyle(by: .value("Type Color", element.type))
                 }
             }
-            .chartXAxis() {
+            .chartXAxis {
                 AxisMarks(values: xValues()) { _ in
                     AxisGridLine()
                     AxisValueLabel(centered: false, collisionResolution: .automatic)
@@ -31,7 +31,7 @@ struct IntraGraphView: View {
             }
             .chartXAxisLabel("Tijd", position: .bottom)
             .chartYAxis {
-                AxisMarks(position: .leading) { _ in
+                AxisMarks(preset: .aligned, position: .leading, values: viewModel.intraday.yValues) { _ in
                     AxisGridLine()
                     AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)))
                 }
