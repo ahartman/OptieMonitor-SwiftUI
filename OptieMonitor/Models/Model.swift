@@ -72,8 +72,8 @@ struct NotificationSetting: Codable {
 struct DisplayData {
     var list = [TableLine]()
     var footer = [FooterLine]()
-    var graph = [GraphLine]()
-    var yValues = [Double]()
+    var grafiekWaarden = [GraphLine]()
+    var grafiekAssen = [String: [Double]]()
 }
 struct TableLine {
     var id: Int = 0
@@ -97,10 +97,9 @@ struct FooterLine: Hashable {
     var index: Int = 0
 }
 struct GraphLine: Hashable {
-    var dateTime: Date
+    var datumTijd: Date
     var type: String
-    var value: Double
-    var index: Int
+    var waarde: Double
 }
 
 // Extensions

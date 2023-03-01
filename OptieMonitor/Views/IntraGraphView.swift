@@ -10,41 +10,59 @@ import SwiftUI
 
 struct IntraGraphView: View {
     @EnvironmentObject var model: ViewModel
-    @Binding var showGraphView: Bool
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
             Chart {
-                ForEach(model.intraday.graph, id: \.self) { element in
+                ForEach(model.intraday.grafiekWaarden.filter { $0.type != "Index" }, id: \.self) { element in
                     BarMark(
-                        x: .value("Uur", element.dateTime),
-                        y: .value("Mutatie in €", element.value)
+                        x: .value("Uur", element.datumTijd),
+                        y: .value("Mutatie in €", element.waarde)
+                    )
+                    .foregroundStyle(by: .value("Type Color", element.type))
+                }
+                ForEach(model.intraday.grafiekWaarden.filter { $0.type == "Index" }, id: \.self) { element in
+                    LineMark(
+                        x: .value("Uur", element.datumTijd),
+                        y: .value("Index", element.waarde)
                     )
                     .foregroundStyle(by: .value("Type Color", element.type))
                 }
             }
+
             .chartXAxis {
                 AxisMarks(values: xValues()) { _ in
                     AxisGridLine()
-                    AxisValueLabel(centered: false, collisionResolution: .automatic)
+                    AxisValueLabel(format: .dateTime.hour().locale(Locale(identifier: "en-GB")), centered: false, collisionResolution: .greedy)
+
                 }
             }
             .chartXAxisLabel("Tijd", position: .bottom)
+
             .chartYAxis {
-                AxisMarks(preset: .aligned, position: .leading, values: model.intraday.yValues) { _ in
+                AxisMarks(preset: .aligned, position: .leading, values: model.intraday.grafiekAssen["Euro"] ?? [0.0]) { _ in
                     AxisGridLine()
-                    AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)))
+                    AxisTick()
+                    AxisValueLabel(format: .currency(code: "EUR").precision(.fractionLength(0)), centered: false)
+                }
+                AxisMarks(preset: .aligned, position: .trailing, values: model.intraday.grafiekAssen["Index"] ?? [0.0]) { _ in
+                    AxisTick()
+                    AxisValueLabel()
                 }
             }
             .chartYAxisLabel("Mutatie in €", position: .leading)
+
             .chartForegroundStyleScale(
-                ["Call": .green, "Put": .purple]
+                ["Call": .green, "Put": .purple, "Index": .blue]
             )
+
             .padding(20.0)
             .navigationBarTitle("Intraday waarde en index", displayMode: .inline)
             .navigationBarItems(leading:
-                Button(action: { showGraphView = false })
-                    { Image(systemName: "table") })
+                Button(action: { dismiss() })
+                    { Image(systemName: "table") }
+            )
         }
     }
 

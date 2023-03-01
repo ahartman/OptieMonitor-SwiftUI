@@ -9,7 +9,7 @@ import SwiftUI
 
 struct IntradayView: View {
     @EnvironmentObject var model: ViewModel
-    @State var showGraphView = false
+    @State private var showGraphSheet = false
     @Environment(\.scenePhase) var scenePhase
 
     var body: some View {
@@ -19,7 +19,8 @@ struct IntradayView: View {
                     Section(
                         header: HeaderView(),
                         footer: FooterView(footerLines: model.intraday.footer)
-                    ) { ForEach(model.intraday.list, id: \.id) { line in
+                    ) { ForEach(model.intraday.list, id: \.id) {
+                        line in
                         RowView(line: line)
                     }
                     }
@@ -29,7 +30,7 @@ struct IntradayView: View {
                 .navigationBarTitle("Intraday (\(UIApplication.appVersion!))", displayMode: .inline)
                 .navigationBarItems(
                     leading:
-                    Button(action: { showGraphView.toggle() })
+                    Button(action: { showGraphSheet.toggle() })
                         { Image(systemName: "chart.bar") },
                     trailing:
                     Button(action: { Task {
@@ -45,6 +46,7 @@ struct IntradayView: View {
         .onChange(of: scenePhase) { phase in
             if phase == .active {
                 Task {
+                    print("IntradayView:50")
                     await model.getJsonData(action: "currentOrder")
                 }
             } else {
@@ -56,8 +58,8 @@ struct IntradayView: View {
                   message: Text(model.message ?? ""),
                   dismissButton: .default(Text("OK")))
         }
-        .sheet(isPresented: $showGraphView) {
-            IntraGraphView(showGraphView: $showGraphView)
+        .sheet(isPresented: $showGraphSheet) {
+            IntraGraphView()
         }
     }
 }

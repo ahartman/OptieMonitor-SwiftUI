@@ -31,7 +31,7 @@ struct InterdayView: View {
             )
         }
         .sheet(isPresented: $showGraphView) {
-            InterGraphView(showGraphView: $showGraphView)
+            InterGraphView()
         }
     }
 }

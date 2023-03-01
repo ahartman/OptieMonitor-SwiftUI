@@ -12,6 +12,7 @@ class ViewModel: ObservableObject {
     @Published var intraday = DisplayData()
     @Published var interday = DisplayData()
     @Published var intradayGraph = [GraphLine]()
+    @Published var intradayIndex = [GraphLine]()
     @Published var interdayGraph = [GraphLine]()
     @Published var isMessage: Bool = false
     @Published var notificationSet = NotificationSetting()
@@ -36,9 +37,12 @@ class ViewModel: ObservableObject {
                 print("JSON error from UserDefaults:", error)
             }
         }
-        Task {
-            await getJsonData(action: "currentOrder")
-        }
+        /*
+         Task {
+             print("ViewModel:42")
+             await getJsonData(action: "currentOrder")
+         }
+          */
     }
 
     func formatDate(dateIn: Date) -> String {
@@ -48,7 +52,7 @@ class ViewModel: ObservableObject {
         return formatter.string(for: dateIn)!
     }
 
-    func formatGraph(lines: [IncomingLine], sender: String = "") -> ([GraphLine], [Double]) {
+    func formatGraph(lines: [IncomingLine], sender: String = "") -> ([GraphLine], [String: [Double]]) {
         var localGraphLines = [GraphLine]()
         var yMin = 0.0
         var yMax = 0.0
@@ -61,25 +65,34 @@ class ViewModel: ObservableObject {
             let putValue = (line.putValue - firstPutValue) * line.nrContracts
 
             localGraphLines.append(GraphLine(
-                dateTime: line.datetime,
+                datumTijd: line.datetime,
                 type: "Call",
-                value: callValue,
-                index: line.indexValue)
+                waarde: callValue)
             )
             localGraphLines.append(GraphLine(
-                dateTime: line.datetime,
+                datumTijd: line.datetime,
                 type: "Put",
-                value: putValue,
-                index: line.indexValue)
+                waarde: putValue)
             )
-
+            localGraphLines.append(GraphLine(
+                datumTijd: line.datetime,
+                type: "Index",
+                waarde: Double(line.indexValue))
+            )
             yMax = max(yMax, callValue, putValue, callValue + putValue)
             yMin = min(yMin, callValue, putValue, callValue + putValue)
         }
         yMax = (yMax/rounding).rounded(.awayFromZero) * rounding
         yMin = (yMin/rounding).rounded(.awayFromZero) * rounding
-        let yValues = stride(from: yMin, through: yMax, by: rounding).map { $0 }
-        return (localGraphLines, yValues)
+
+        var indexMax = localGraphLines.filter { $0.type == "Index" }.map { $0.waarde }.max() ?? 0
+        indexMax = (indexMax/100.0).rounded(.awayFromZero) * 100.0
+
+        let localyValues = [
+            "Euro": Array(stride(from: yMin, through: yMax, by: rounding)),
+            "Index": Array(stride(from: 0, through: indexMax, by: 100.0))
+        ]
+        return (localGraphLines, localyValues)
     }
 
     func formatFooter(lines: [IncomingLine], openLine: IncomingLine, sender: String = "") -> [FooterLine] {
@@ -104,8 +117,7 @@ class ViewModel: ObservableObject {
                 callPercent: Formatter.percentage.string(for: (lastLine!.callValue/openLine.callValue) - 1)!,
                 putPercent: Formatter.percentage.string(for: (lastLine!.putValue/openLine.putValue) - 1)!,
                 orderPercent: Formatter.percentage.string(for: (tempLast1/tempFirst1) - 1)!,
-                index: openLine.indexValue
-            ))
+                index: openLine.indexValue))
         }
         return footer
     }
@@ -159,12 +171,12 @@ class ViewModel: ObservableObject {
     func unpackJSON(result: IncomingData) {
         intraday.list = formatList(lines: result.intradays)
         intraday.footer = formatFooter(lines: result.intradays, openLine: result.interdays.first!, sender: "intra")
-        (intraday.graph, intraday.yValues) = formatGraph(lines: result.intradays, sender: "intra")
+        (intraday.grafiekWaarden, intraday.grafiekAssen) = formatGraph(lines: result.intradays, sender: "intra")
 
         interday.list = formatList(lines: result.interdays)
         interday.footer = formatFooter(lines: result.interdays, openLine: result.interdays.first!)
-        (interday.graph, interday.yValues) = formatGraph(lines: result.interdays)
-
+        (interday.grafiekWaarden, interday.grafiekAssen) = formatGraph(lines: result.interdays)
+ 
         caption = result.caption
         message = result.message
         notificationSet = result.notificationSettings

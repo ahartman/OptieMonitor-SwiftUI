@@ -152,11 +152,11 @@
 			};
 			buildConfigurationList = E83005242548066400B2CA56 /* Build configuration list for PBXProject "OptieMonitor" */;
 			compatibilityVersion = "Xcode 13.0";
-			developmentRegion = en;
+			developmentRegion = nl;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
+				nl,
 			);
 			mainGroup = E83005202548066400B2CA56;
 			packageReferences = (
